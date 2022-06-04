@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using HelixToolkit.Wpf;
 using Palicje_MKE.windows;
+using Palicje_MKE.lib;
 using System.Windows.Media.Media3D;
 
 
@@ -27,11 +28,14 @@ namespace Palicje_MKE
     public partial class MainWindow : Window
     {
         public Model3DGroup konstrukcija { get; set; } = new Model3DGroup();
+        public WindowProperties winProp;
 
         public MainWindow()
         {
             DataContext = this;
             InitializeComponent();
+            winProp = new WindowProperties(ProgramMessageBox);
+
 
             viewport2D.Camera.ChangeDirection(new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 0);
             viewport3D.Camera.ChangeDirection(new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 0);
@@ -51,8 +55,17 @@ namespace Palicje_MKE
             */
 
             MeshBuilder b = new MeshBuilder();
-            b.AddNode(new Point3D(3, 3, 3), new Vector3D(1, 1, 1), );
+            //b.AddNode(new Point3D(3, 3, 3), new Vector3D(1, 1, 1), );
 
+        }
+
+        public void OpenGithub(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/vito-tivadar/Palicje-MKE");
+        }
+        public void OpenIcons8(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://icons8.com/");
         }
 
         private void CommonCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -62,7 +75,12 @@ namespace Palicje_MKE
 
         private void DodajVozlisce_Click(object sender, RoutedEventArgs e)
         {
-            poljeZaSpreminjanje_grid.Children.Add(new ClenekControl());
+            poljeZaSpreminjanje_grid.Children.Add(new ClenekControl(winProp));
+        }
+
+        private void ClearProgramMessage(object sender, RoutedEventArgs e)
+        {
+            winProp.messageBox.Text = "";
         }
     }
 }

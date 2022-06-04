@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using System.Text.RegularExpressions;
+using Palicje_MKE.lib;
 
 namespace Palicje_MKE.windows
 {
@@ -22,13 +22,16 @@ namespace Palicje_MKE.windows
     /// </summary>
     public partial class ClenekControl : UserControl
     {
+        private TextBox MessageBox;
+        private WindowProperties winProp;
         private bool podporaChecked
         {
             get;
             set;
         }
-        public ClenekControl()
+        public ClenekControl(WindowProperties winProp)
         {
+            this.winProp = winProp;
             this.DataContext = this;
             podporaChecked = false;
 
@@ -45,7 +48,7 @@ namespace Palicje_MKE.windows
             }
             catch
             {
-                Console.WriteLine("ERROR!");
+                winProp.messageBox.Text = "Napaka! Koordinate morajo biti številčne vrednosti.";
             }
         }
     }

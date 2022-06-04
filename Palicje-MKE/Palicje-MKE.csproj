@@ -44,6 +44,7 @@
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -62,10 +63,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="lib\Elementi.cs" />
+    <Compile Include="lib\Palice.cs" />
     <Compile Include="lib\Konstrukcija.cs" />
     <Compile Include="lib\MessageHandler.cs" />
     <Compile Include="lib\Clenki.cs" />
+    <Compile Include="lib\Settings.cs" />
     <Compile Include="windows\ClenekControl.xaml.cs">
       <DependentUpon>ClenekControl.xaml</DependentUpon>
     </Compile>
@@ -113,6 +115,16 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\icons8-delete-chat-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-info-24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="lib\Helix-Toolkit\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

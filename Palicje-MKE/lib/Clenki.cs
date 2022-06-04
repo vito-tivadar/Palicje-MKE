@@ -8,7 +8,7 @@ using System.Windows.Media.Media3D;
 
 namespace Palicje_MKE.lib
 {
-    internal class Clenki
+    public class Clenki
     {
         public Collection<Clenek> clenki;
 
@@ -78,7 +78,7 @@ namespace Palicje_MKE.lib
     }
 
     
-    internal class Clenek
+    public class Clenek
     {
 
         public Point3D koordinate { get; set; }

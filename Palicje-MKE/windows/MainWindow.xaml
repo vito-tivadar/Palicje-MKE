@@ -34,32 +34,53 @@
             <Setter Property="IsViewCubeEdgeClicksEnabled" Value="False"/>
             <Setter Property="ShowCoordinateSystem" Value="True"/>
         </Style>
-    </Window.Resources>  
-    
+    </Window.Resources>
+
 
 
     <Grid>
         <!-- Vrstica z meniji -->
         <Menu FontSize="14" VerticalAlignment="Top" >
-            <MenuItem Header="File" Padding="10,2" VerticalAlignment="Stretch">
-                <MenuItem Header="New"/>
-                <MenuItem Header="Open"/>
-                <MenuItem Header="Save"/>
-                <MenuItem Header="Save As"/>
+            <MenuItem Header="Datoteka" Padding="10,2" VerticalAlignment="Stretch">
+                <MenuItem Header="Novo"/>
+                <MenuItem Header="Odpri"/>
+                <MenuItem Header="Shrani"/>
+                <MenuItem Header="Shrani kot"/>
                 <Separator/>
-                <MenuItem Header="Exit"/>
+                <MenuItem Header="Izhod"/>
             </MenuItem>
-            <MenuItem Header="Preferences" Padding="10,2" VerticalAlignment="Stretch">
-                <MenuItem Header="Options"/>
+            <MenuItem Header="Uredi" Padding="10,2" VerticalAlignment="Stretch">
+                <MenuItem Header="Dodaj Členek"/>
+                <MenuItem Header="Odstrani Členek"/>
+                <MenuItem Header="Dodaj Palico"/>
+                <MenuItem Header="Odstrani Palico"/>
+                <Separator/>
+                <MenuItem Header="Nastavitve"/>
+                <!--
+                nastavitve: barve elementov, tema, jezik, 
+                -->
             </MenuItem>
-            <MenuItem Header="About" Padding="10,2" VerticalAlignment="Stretch">
-                <MenuItem Header="Options"/>
+            <MenuItem Header="Pogled" Padding="10,2" VerticalAlignment="Stretch">
+                <MenuItem Header="Velikost elementov"/>
+                <Separator/>
+                <MenuItem Header="Vklopi pogledde">
+                    <MenuItem Header="Ravnina XY" IsCheckable="True" StaysOpenOnClick="True"/>
+                    <MenuItem Header="Ravnina XZ" IsCheckable="True" StaysOpenOnClick="True"/>
+                    <MenuItem Header="Ravnina YZ" IsCheckable="True" StaysOpenOnClick="True"/>
+                    <MenuItem Header="3D Pogled" IsCheckable="True" StaysOpenOnClick="True"/>
+                    <MenuItem Header="Pogled deformacij" IsCheckable="True" StaysOpenOnClick="True"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="O programu" Padding="10,2" VerticalAlignment="Stretch">
+                <MenuItem Header="Kako uporabljati program"/>
+                <MenuItem Header="Github" Click="OpenGithub"/>
+                <MenuItem Header="Ikone (icons8)" Click="OpenIcons8"/>
             </MenuItem>
         </Menu>
         <!-- Glavni del -->
-        <Grid Margin="0,25,0,16" Background="Gray">
+        <Grid Margin="0,25,0,24" Background="Gray">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="250"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -80,7 +101,7 @@
                         <ModelVisual3D Content="{Binding Path=konstrukcija}"/>
                     </ht:HelixViewport3D>
                 </TabItem>
-                
+
                 <TabItem Header="2D Pogled">
                     <ht:HelixViewport3D x:Name="viewport2D"
                                         Background="LightGray"
@@ -102,8 +123,16 @@
 
 
         <!-- Spodnja vrstica -->
-        <StatusBar VerticalAlignment="Bottom" Height="16" FontSize="8">
-            <TextBlock x:Name="ProgramMessageBox"/>
-        </StatusBar>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20" Margin="5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="22"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Button Width="22" Height="22" Margin="0,-4,0,0" Grid.Column="0" Background="Transparent" BorderBrush="Transparent" Click="ClearProgramMessage">
+                <Image Source="/Resources/icons8-delete-chat-24.png" />
+            </Button>
+            <TextBlock x:Name="ProgramMessageBox" FontSize="14" Margin="10,-2,0,0" Height="22" Grid.Column="1" HorizontalAlignment="Stretch" Text="Program za preračun paličnih konstrukcij."/>
+        </Grid>
     </Grid>
 </Window>

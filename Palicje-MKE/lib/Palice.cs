@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace Palicje_MKE.lib
 {
-    internal class Palice
+    public class Palice
     {
         Collection<Palica> _palice;
 
@@ -18,7 +18,7 @@ namespace Palicje_MKE.lib
     }
 
 
-    internal class Palica
+    public class Palica
     {
         public Clenek _clenek1;
         public Clenek _clenek2;

@@ -7,17 +7,17 @@ using System.Windows.Controls;
 
 namespace Palicje_MKE.lib
 {
-    public class Settings
+    public class Nastavitve
     {
     }
 
-    public class WindowProperties
+    public class NastavitveOken
     {
         public TextBlock messageBox { get; }
         public Clenek clenek { get; set; }
         public Palica palica { get; set; }
 
-        public WindowProperties(TextBlock textBlock)
+        public NastavitveOken(TextBlock textBlock)
         {
             this.messageBox = textBlock;
         }

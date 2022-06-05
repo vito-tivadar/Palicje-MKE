@@ -23,13 +23,13 @@ namespace Palicje_MKE.windows
     public partial class ClenekControl : UserControl
     {
         private TextBox MessageBox;
-        private WindowProperties winProp;
+        private NastavitveOken winProp;
         private bool podporaChecked
         {
             get;
             set;
         }
-        public ClenekControl(WindowProperties winProp)
+        public ClenekControl(NastavitveOken winProp)
         {
             this.winProp = winProp;
             this.DataContext = this;

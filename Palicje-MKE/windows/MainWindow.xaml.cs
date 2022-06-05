@@ -28,13 +28,13 @@ namespace Palicje_MKE
     public partial class MainWindow : Window
     {
         public Model3DGroup konstrukcija { get; set; } = new Model3DGroup();
-        public WindowProperties winProp;
+        public NastavitveOken winProp;
 
         public MainWindow()
         {
             DataContext = this;
             InitializeComponent();
-            winProp = new WindowProperties(ProgramMessageBox);
+            winProp = new NastavitveOken(ProgramMessageBox);
 
 
             viewport2D.Camera.ChangeDirection(new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 0);

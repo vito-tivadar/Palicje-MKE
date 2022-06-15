@@ -1,22 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
+using System.Windows.Controls;
 using HelixToolkit.Wpf;
 using Palicje_MKE.windows;
+using Palicje_MKE.lib.MKE;
 using Palicje_MKE.lib;
 using System.Windows.Media.Media3D;
+using System.IO;
+using Newtonsoft.Json;
 
 
 
@@ -27,35 +21,22 @@ namespace Palicje_MKE
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Model3DGroup konstrukcija { get; set; } = new Model3DGroup();
-        public NastavitveOken winProp;
+        public ModelKonstrukcije konstrukcija;
 
         public MainWindow()
         {
             DataContext = this;
             InitializeComponent();
-            winProp = new NastavitveOken(ProgramMessageBox);
 
+            clenekControl.PrikaziOdstraniClenek();
+            palicaControl.PrikaziOdstraniPalico();
 
-            viewport2D.Camera.ChangeDirection(new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 0);
-            viewport3D.Camera.ChangeDirection(new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 0);
-            viewport3D_rezultati.Camera.ChangeDirection(new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), 0);
+            konstrukcija = new ModelKonstrukcije();
 
+            viewportModel.Children.Add(konstrukcija.visualModel);
 
-            /*
-            MeshBuilder builder = new MeshBuilder();
-            builder.AddSphere(new Point3D(3, 3, 3), 1);
-            
-            MeshGeometry3D mesh = builder.ToMesh(true);
-
-            Material green = MaterialHelper.CreateMaterial(Colors.Red);
-            Material white = MaterialHelper.CreateMaterial(Colors.White);
-
-            konstrukcija.Children.Add(new GeometryModel3D { Geometry = mesh, Material = green, BackMaterial = white });
-            */
-
-            MeshBuilder b = new MeshBuilder();
-            //b.AddNode(new Point3D(3, 3, 3), new Vector3D(1, 1, 1), );
+            App.sporocilo.SetTextBlock(ProgramMessageBox);
+            App.sporocilo.SetText("Program za preračun paličnih konstrukcij", Colors.CadetBlue, "Izdelal: Vito Tivadar");
 
         }
 
@@ -73,14 +54,100 @@ namespace Palicje_MKE
             e.CanExecute = true;
         }
 
-        private void DodajVozlisce_Click(object sender, RoutedEventArgs e)
+        private void DodajClenek_Click(object sender, RoutedEventArgs e)
         {
-            poljeZaSpreminjanje_grid.Children.Add(new ClenekControl(winProp));
+            DodajClenek dc = new DodajClenek();
+            if(dc.ShowDialog() == true)
+            {
+                konstrukcija.DodajClenek(dc.clenek);
+                return;
+            }
+
+            App.sporocilo.SetText($"Dodajanje členka je bilo preklicano.");
+        }
+
+        private void DodajPalico_Click(object sender, RoutedEventArgs e)
+        {
+            if (konstrukcija.clenki.clenki.Count < 2)
+            {
+                App.sporocilo.SetError("Za dodajanje palice morata biti dodana vsaj 2 členka.");
+                return;
+            }
+            DodajPalico dp = new DodajPalico();
+            dp.DodajSeznamImen(konstrukcija.clenki.PridobiImena());
+            if (dp.ShowDialog() == true)
+            {
+                Palica p = new Palica(konstrukcija.GetClenek(dp.clenek1), konstrukcija.GetClenek(dp.clenek2));
+                konstrukcija.DodajPalico(p);
+                return;
+            }
+            App.sporocilo.SetText($"Dodajanje palice je bilo preklicano.");
         }
 
         private void ClearProgramMessage(object sender, RoutedEventArgs e)
         {
-            winProp.messageBox.Text = "";
+            App.sporocilo.SetText("");
+        }
+        
+        private void TestToJSON_Click(object sender, RoutedEventArgs e)
+        {
+            var test1 = konstrukcija.clenki;
+            var test2 = konstrukcija.palice;
+
+            string jsonFile1 = JsonConvert.SerializeObject(test1, Formatting.Indented);
+            string jsonFile2 = JsonConvert.SerializeObject(test2, Formatting.Indented);
+            File.WriteAllText("./test.json", jsonFile1);
+            File.AppendAllText("./test.json", jsonFile2);
+        }
+
+        private void helixViewport_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            HelixViewport3D vp = sender as HelixViewport3D;
+            var firstHit = vp.Viewport.FindHits(e.GetPosition(vp)).FirstOrDefault();
+            if (firstHit == null)
+            {
+                clenekControl.Visibility = Visibility.Collapsed;
+                palicaControl.Visibility = Visibility.Collapsed;
+
+                App.sporocilo.SetText("null");
+                return;
+            }
+
+            Type visualType = firstHit.Visual.GetType();
+            
+            if (visualType == typeof(SphereVisual3D))
+            {
+                palicaControl.Visibility = Visibility.Collapsed;
+                clenekControl.Visibility = Visibility.Visible;
+
+                SphereVisual3D sphere = firstHit.Visual as SphereVisual3D;
+                App.sporocilo.SetText($"Izbran je členek: {sphere.GetName()}");
+
+                Clenek c = konstrukcija.GetClenek(sphere.GetName());
+                if (c != null)
+                {
+                    clenekControl.SetClenek(c, sphere);
+                }
+                else
+                {
+                    //clenek not found
+                    //delete visual element
+                }
+                return;
+            }
+
+            if (visualType == typeof(PipeVisual3D))
+            {
+                clenekControl.Visibility = Visibility.Collapsed;
+                palicaControl.Visibility = Visibility.Visible;
+
+                PipeVisual3D pipe = firstHit.Visual as PipeVisual3D;
+                App.sporocilo.SetText($"palica: c1:{pipe.Point1} c2:{pipe.Point2}");
+
+                // pipe.Point1 = new Point3D(5, 5, 5);
+                return;
+            }
+
         }
     }
 }

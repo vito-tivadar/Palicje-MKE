@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ht="http://helix-toolkit.org/wpf"
+        xmlns:windows="clr-namespace:Palicje_MKE.windows"
         xmlns:local="clr-namespace:Palicje_MKE"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
@@ -13,6 +14,8 @@
         <CommandBinding Command="Open" CanExecute="CommonCommandBinding_CanExecute" />
         <CommandBinding Command="Save" CanExecute="CommonCommandBinding_CanExecute" />
     </Window.CommandBindings>
+    
+
     <Window.Resources>
         <!-- Navpični zavihki -->
         <Style TargetType="{x:Type TabItem}">
@@ -35,8 +38,6 @@
             <Setter Property="ShowCoordinateSystem" Value="True"/>
         </Style>
     </Window.Resources>
-
-
 
     <Grid>
         <!-- Vrstica z meniji -->
@@ -76,49 +77,55 @@
                 <MenuItem Header="Github" Click="OpenGithub"/>
                 <MenuItem Header="Ikone (icons8)" Click="OpenIcons8"/>
             </MenuItem>
+            <MenuItem Margin="50,0,0,0" Header="test => json" Click="TestToJSON_Click"/>
         </Menu>
         <!-- Glavni del -->
-        <Grid Margin="0,25,0,24" Background="Gray">
+        <Grid Margin="0,25,0,24">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="65"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Button x:Name="DodajVozlisce" Content="Dodaj vozlišče" Height="25" Margin="5,5,5,0" VerticalAlignment="Top" Click="DodajVozlisce_Click"/>
-            <Button Content="Dodaj element" Height="25" Margin="5,35,5,0" VerticalAlignment="Top"/>
+            <Button Content="Dodaj členek" Height="25" Margin="5,5,5,0" VerticalAlignment="Top" Click="DodajClenek_Click"/>
+            <Button Content="Dodaj palico" Height="25" Margin="5,35,5,0" VerticalAlignment="Top" Click="DodajPalico_Click"/>
 
-
-
-            <Grid x:Name="poljeZaSpreminjanje_grid" Grid.Row="2"/>
-
-            <TabControl Grid.Column="1" Grid.RowSpan="2" TabStripPlacement="Right">
-                <TabItem Header="3D Pogled">
-                    <ht:HelixViewport3D x:Name="viewport3D" Background="LightGray">
-                        <ht:CoordinateSystemVisual3D/>
-                        <ModelVisual3D Content="{Binding Path=konstrukcija}"/>
-                    </ht:HelixViewport3D>
-                </TabItem>
-
-                <TabItem Header="2D Pogled">
-                    <ht:HelixViewport3D x:Name="viewport2D"
-                                        Background="LightGray"
-                                        IsRotationEnabled="False"
-                                        IsMoveEnabled="False"
-                                        ShowViewCube="False"
-                                        Orthographic="True">
-                        <ht:CoordinateSystemVisual3D Content="{Binding Path=konstrukcija}"/>
-                    </ht:HelixViewport3D>
-                </TabItem>
-
-                <TabItem Header="Rezultati">
-                    <ht:HelixViewport3D x:Name="viewport3D_rezultati" Background="LightGray">
-                        <ht:CoordinateSystemVisual3D Content="{Binding Path=konstrukcija}"/>
-                    </ht:HelixViewport3D>
-                </TabItem>
-            </TabControl>
+            <Grid x:Name="poljeZaSpreminjanje_grid" Grid.Row="2" Margin="0,5,0,0">
+                <windows:ClenekControl x:Name="clenekControl" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+                <windows:PalicaControl x:Name="palicaControl" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+            </Grid>
+            <Grid x:Name="viewportControl_grid" Grid.Column="1" Grid.RowSpan="2">
+                <ht:HelixViewport3D x:Name="viewport3D"
+                                    Background="LightGray"
+                                    IsViewCubeEdgeClicksEnabled="True"
+                                    MouseDown="helixViewport_MouseDown">
+                    <ModelVisual3D x:Name="viewportModel" />
+                    <!--    2D viewport
+                    <ht:CoordinateSystemVisual3D/> // enable / disable
+                        IsRotationEnabled="False"
+                        IsMoveEnabled="False"
+                        ShowViewCube="False"
+                        Orthographic="True"
+                    -->
+                </ht:HelixViewport3D>
+                <Button Visibility="Hidden" Width="32" Height="32" Background="Transparent" BorderBrush="Transparent"
+                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,3,0"
+                ToolTip="Nastavitve 3D Pogleda">
+                    <!--
+                    odpri meni za:
+                    omogoči /onemogoči:
+                    - kocko
+                    - rob na kocki
+                    - xyz puščice
+                    - koordinatno izhodišče
+                    - pogled ( naris tloris ...) ne moreš rotirati v tistih pogledih
+                    -->
+                    
+                    <Image Source="/Resources/icons8-window-settings-100.png" />
+                </Button>
+            </Grid>
         </Grid>
 
 
@@ -132,7 +139,7 @@
             <Button Width="22" Height="22" Margin="0,-4,0,0" Grid.Column="0" Background="Transparent" BorderBrush="Transparent" Click="ClearProgramMessage">
                 <Image Source="/Resources/icons8-delete-chat-24.png" />
             </Button>
-            <TextBlock x:Name="ProgramMessageBox" FontSize="14" Margin="10,-2,0,0" Height="22" Grid.Column="1" HorizontalAlignment="Stretch" Text="Program za preračun paličnih konstrukcij."/>
+            <TextBlock x:Name="ProgramMessageBox" FontSize="14" Margin="10,-2,0,0" Height="22" Grid.Column="1" HorizontalAlignment="Stretch"/>
         </Grid>
     </Grid>
 </Window>

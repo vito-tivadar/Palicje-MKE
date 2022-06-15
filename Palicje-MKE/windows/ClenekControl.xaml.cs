@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-using Palicje_MKE.lib;
+using Palicje_MKE.lib.MKE;
+using System.Windows.Media.Media3D;
+using HelixToolkit.Wpf;
+
 
 namespace Palicje_MKE.windows
 {
@@ -22,34 +14,105 @@ namespace Palicje_MKE.windows
     /// </summary>
     public partial class ClenekControl : UserControl
     {
-        private TextBox MessageBox;
-        private NastavitveOken winProp;
-        private bool podporaChecked
-        {
-            get;
-            set;
-        }
-        public ClenekControl(NastavitveOken winProp)
-        {
-            this.winProp = winProp;
-            this.DataContext = this;
-            podporaChecked = false;
+        public Clenek clenek;
+        public SphereVisual3D sphere;
+        private Palica[] povezanePalice;
 
+        public ClenekControl()
+        {
             InitializeComponent();
+            clenek = new Clenek(new Point3D(0,0,0), new Podpora());
         }
 
-        private void Koordinata_Changed(object sender, RoutedEventArgs e)
+        public void PrikaziOdstraniClenek()
         {
-            TextBox tb = (TextBox)sender;
+            OdstraniClenek_button.Visibility = Visibility.Visible;
+            //clenek = null;
+        }
+
+        public void SetClenek(Clenek clenek, SphereVisual3D sphere)
+        {
+            this.clenek = clenek;
+            this.sphere = sphere;
+            SetKoordinate();
+
+            //when you change checkboxes it triggers on checked event and disables wrong checkboxes
+            X_checkBox.IsChecked = clenek.podpora.X;
+            Y_checkBox.IsChecked = clenek.podpora.Y;
+            Z_checkBox.IsChecked = clenek.podpora.Z;
+
+            if( clenek.podpora.X == false &&
+                clenek.podpora.Y == false &&
+                clenek.podpora.Z == false)
+                Podpora_checkbox.IsChecked = false;
+            else Podpora_checkbox.IsChecked = true;
+        }
+        
+        public Clenek GetClenek()
+        {
+            return clenek;
+        }
+        
+        public void ClearClenek()
+        {
+            clenek = null;
+            sphere = null;
+        }
+        
+        private void SetKoordinate()
+        {
+            X.Text = clenek.koordinate.X.ToString();
+            Y.Text = clenek.koordinate.Y.ToString();
+            Z.Text = clenek.koordinate.Z.ToString();
+        }
+
+        private void GetKoordinate(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = sender as TextBox;
             try
             {
-                double res = Convert.ToDouble(tb.Text);
-                // assign to point
+                switch (tb.Name)
+                {
+                    case "X":
+                        clenek.PosodobiX(Convert.ToDouble(X.Text));
+                        break;
+                    case "Y":
+                        clenek.PosodobiY(Convert.ToDouble(Y.Text));
+                        break;
+                    case "Z":
+                        clenek.PosodobiZ(Convert.ToDouble(Z.Text));
+                        break;
+                }
+                if(sphere != null) sphere.Center = clenek.koordinate;
             }
             catch
             {
-                winProp.messageBox.Text = "Napaka! Koordinate morajo biti številčne vrednosti.";
+                App.sporocilo.SetError("Koordinate morajo biti številčne vrednosti.");
             }
         }
+
+        private void OdstraniClenek_button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if ((bool)Podpora_checkbox.IsChecked)
+            {
+                clenek.podpora.X = (bool)X_checkBox.IsChecked;
+                clenek.podpora.Y = (bool)Y_checkBox.IsChecked;
+                clenek.podpora.Z = (bool)Z_checkBox.IsChecked;
+
+            }
+            else
+            {
+                clenek.podpora.X = false;
+                clenek.podpora.Y = false;
+                clenek.podpora.Z = false;
+            }
+        }
+
+        ///DODAJ ZA PODPORO;
     }
 }

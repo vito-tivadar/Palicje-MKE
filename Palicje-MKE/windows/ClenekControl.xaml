@@ -5,14 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Palicje_MKE.windows"
              mc:Ignorable="d" 
-             d:DesignWidth="250" Background="White" VerticalAlignment="Stretch">
+             d:DesignWidth="150" d:DesignHeight="240"  Background="White" VerticalAlignment="Stretch">
     <UserControl.Resources>
         <Style TargetType="{x:Type Window}">
             <Setter Property="FontSize" Value="16" />
         </Style>
     </UserControl.Resources>
     <Grid>
-        <TextBlock Margin="10,10,0,0" Text="Koordinate vozlišča:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16"/>
+        <TextBlock Margin="5,10,0,0" Text="Lastnosti členka:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16"/>
 
         <Grid Margin="10,36,10,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
@@ -27,20 +27,20 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="X:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
+            <TextBlock Text="X:" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Right" Width="25"/>
             <TextBlock Text="Y:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
             <TextBlock Text="Z:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2"/>
-            <TextBox Name="x" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Text="0" LostFocus="Koordinata_Changed" />
-            <TextBox Name="y" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="1" Text="0" LostFocus="Koordinata_Changed" />
-            <TextBox Name="z" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="2" Text="0" LostFocus="Koordinata_Changed" />
+            <TextBox Name="X" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Text="0" LostFocus="GetKoordinate" />
+            <TextBox Name="Y" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="1" Text="0" LostFocus="GetKoordinate" />
+            <TextBox Name="Z" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="2" Text="0" LostFocus="GetKoordinate" />
             <TextBlock Text="mm" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <TextBlock Text="mm" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <TextBlock Text="mm" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
 
         </Grid>
-        <TextBlock Margin="9,140,0,0" Text="Podpora:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16"/>
-        <CheckBox x:Name="Podpora_checkbox" Margin="80,144,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" IsChecked="False"/> 
+        <TextBlock Margin="8,140,0,0" Text="Podpora:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16"/>
+        <CheckBox x:Name="Podpora_checkbox" Margin="80,144,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" IsChecked="False" Checked="checkBox_Checked"/>
         <Grid Margin="9,160,9,5" HorizontalAlignment="Stretch" VerticalAlignment="Top" IsEnabled="{Binding ElementName=Podpora_checkbox, Path=IsChecked}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="18"/>
@@ -53,10 +53,12 @@
             </Grid.ColumnDefinitions>
             <TextBlock Text="Nepomična v smeri:" Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Center" />
             <Image Grid.Column="2" HorizontalAlignment="Right" Height="18" Width="18" Source="/Resources/icons8-info-24.png" ToolTip="Z izbiro onemogočimo pomik v tisti smeri. V neizbranih smereh je podpora drsna. Če so izbrane vse smeri je podpora nepomična." />
-            <CheckBox x:Name="checkBox"  Grid.Column="0" Content="X" HorizontalAlignment="Left" Margin="1,0,0,0" Grid.Row="3" VerticalAlignment="Bottom" />
-            <CheckBox x:Name="checkBox1" Grid.Column="1" Content="Y" HorizontalAlignment="Left" Margin="1,0,0,0" Grid.Row="3" VerticalAlignment="Bottom" />
-            <CheckBox x:Name="checkBox2" Grid.Column="2" Content="Z" HorizontalAlignment="Left" Margin="1,0,0,0" Grid.Row="3" VerticalAlignment="Bottom" />
+            <CheckBox x:Name="X_checkBox" Grid.Column="0" Content="X" HorizontalAlignment="Left" Margin="1,0,0,0" Grid.Row="3" VerticalAlignment="Bottom" Checked="checkBox_Checked" />
+            <CheckBox x:Name="Y_checkBox" Grid.Column="1" Content="Y" HorizontalAlignment="Left" Margin="1,0,0,0" Grid.Row="3" VerticalAlignment="Bottom" Checked="checkBox_Checked" />
+            <CheckBox x:Name="Z_checkBox" Grid.Column="2" Content="Z" HorizontalAlignment="Left" Margin="1,0,0,0" Grid.Row="3" VerticalAlignment="Bottom" Checked="checkBox_Checked" />
+
 
         </Grid>
+        <Button x:Name="OdstraniClenek_button" Content="Odstrani členek" HorizontalAlignment="Stretch" VerticalAlignment="Top" Visibility="Collapsed" Margin="8,215,8,0"  Click="OdstraniClenek_button_Click" />
     </Grid>
 </UserControl>

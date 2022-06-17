@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
-namespace Palicje_MKE.lib
+namespace Palicje_MKE.lib.MKE
 {
-    public class Nastavitve
+    internal class KalkulatorPaličja
     {
     }
 }

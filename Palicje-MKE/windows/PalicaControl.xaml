@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="Palicje_MKE.windows.PalicaControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Palicje_MKE.windows"
+             mc:Ignorable="d" 
+             d:DesignHeight="160" d:DesignWidth="150" Background="White">
+    <Grid>
+        <TextBlock Margin="5,10,0,0" Text="Lastnosti palice:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16"/>
+
+        <TextBlock Margin="8,36,0,0" Text="Prvi členek palice:" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <ComboBox x:Name="prviClenek" HorizontalAlignment="Stretch" Margin="8,52,8,0" VerticalAlignment="Top" />
+
+        <TextBlock Margin="8,79,0,0" Text="Drugi členek palice:" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <ComboBox x:Name="drugiClenek" HorizontalAlignment="Stretch" Margin="8,95,8,0" VerticalAlignment="Top" />
+
+        <Button x:Name="OdstraniPalico_button" Content="Odstrani palico" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="8,135,8,0"  Click="OdstraniPalico_button_Click" />
+    </Grid>
+</UserControl>

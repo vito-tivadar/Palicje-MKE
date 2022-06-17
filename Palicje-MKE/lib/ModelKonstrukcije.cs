@@ -46,6 +46,8 @@ namespace Palicje_MKE.lib
         {
             if (clenki.Dodaj(clenek))
             {
+                clenek.ClenekUpdated += PosodobiVisualPalico;
+
                 SphereVisual3D visualClenek = new SphereVisual3D();
                 visualClenek.Center = clenek.koordinate;
                 visualClenek.Radius = 0.20;
@@ -81,6 +83,18 @@ namespace Palicje_MKE.lib
                 if(c.ime == ime) return c;
             }
             return null;
+        }
+
+        private void PosodobiVisualPalico(object sender, ClenekEventArgs e)
+        {
+            string ime = e.clenek.prejsnjeIme;
+            /*
+            foreach (Visual3D item in collection)
+            {
+
+            }
+            */
+
         }
 
         public void FindElementsWithPoint(Point3D koordinate)

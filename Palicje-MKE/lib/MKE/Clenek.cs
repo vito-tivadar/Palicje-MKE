@@ -20,6 +20,8 @@ namespace Palicje_MKE.lib.MKE
         }
 
         public Podpora podpora { get; set; }
+
+        public string prejsnjeIme { get; set; }
         public string ime { get; set; }
 
 
@@ -32,6 +34,7 @@ namespace Palicje_MKE.lib.MKE
 
         private void PosodobiIme()
         {
+            this.prejsnjeIme = this.ime;
             this.ime = $"({this.koordinate.X},{this.koordinate.Y},{this.koordinate.Z})";
         }
 
@@ -49,6 +52,24 @@ namespace Palicje_MKE.lib.MKE
         {
             _koordinate.Z = z;
             PosodobiIme();
+        }
+
+        public event EventHandler<ClenekEventArgs> ClenekUpdated;
+
+        protected virtual void OnClenekUpdated(Clenek clenek)
+        {
+            if(ClenekUpdated != null) ClenekUpdated(this, new ClenekEventArgs(clenek));
+        }
+    }
+
+
+    public class ClenekEventArgs : EventArgs
+    {
+        public Clenek clenek { get; set; }
+
+        public ClenekEventArgs(Clenek clenek)
+        {
+            this.clenek = clenek;
         }
     }
 

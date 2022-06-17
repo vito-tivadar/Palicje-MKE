@@ -30,9 +30,26 @@ namespace Palicje_MKE.lib.MKE
                 OnPropertyChanged();
             }
         }
-        public string ime { get; set; }
+        private string _ime;
 
-        public double dolzina;
+        public string ime
+        {
+            get { return clenek1.ime + clenek2.ime; }
+            set
+            {
+                _ime = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private double _dolzina;
+
+        public double dolzina
+        {
+            get { return PreracunajDolzino(); }
+        }
+
         public double ploscinaPrereza;
         public double modulElasticnosti;
 
@@ -40,36 +57,37 @@ namespace Palicje_MKE.lib.MKE
         {
             this.clenek1 = clenek1;
             this.clenek2 = clenek2;
-            PosodobiIme();
-
-            clenek1.PropertyChanged += PosodobiPrviClenek;
-            clenek2.PropertyChanged += PosodobiDrugiClenek;
             /* 
-            _dolzina = PreracunajDolzino(clenek 1.koordinate, clenek2.koordinate);                             //dodaj preračun glede na koordinate
+            _dolzina = PreracunajDolzino(clenek 1.koordinate, clenek2.koordinate);                  //dodaj preračun glede na koordinate
             _ploscinaPrereza = ploscinaPrereza;             
             _modulElasticnosti = modulElasticnosti;
             */
         }
 
-        private void PosodobiIme()
-        {
-            this.ime = $"{clenek1.ime}{clenek2.ime}";
-        }
-
         private void PosodobiPrviClenek(object sender, EventArgs e)
         {
             clenek2 = sender as Clenek;
-            PosodobiIme();
         }
         private void PosodobiDrugiClenek(object sender, EventArgs e)
         {
             clenek2 = sender as Clenek;
-            PosodobiIme();
         }
 
         public void DodajlPalico3D(PipeVisual3D palica3D)
         {
             palicaVisual3D = palica3D;
+        }
+
+        public double PreracunajDolzino()
+        {
+            Point3D c1 = this.clenek1.koordinate;
+            Point3D c2 = this.clenek2.koordinate;
+
+            double x = Math.Pow(c2.X - c1.X, 2);
+            double y = Math.Pow(c2.Y - c1.Y, 2);
+            double z = Math.Pow(c2.Z - c1.Z, 2);
+
+            return Math.Sqrt(x + y + z);
         }
     }
 
@@ -77,7 +95,7 @@ namespace Palicje_MKE.lib.MKE
 
 
 
-    public class Palice
+    public class Palice : ObservableCollection<Palica>
     {
         public Collection<Palica> palice;  // private in pridobi z get()
 
@@ -87,7 +105,7 @@ namespace Palicje_MKE.lib.MKE
         }
         public bool PalicaObstaja(Point3D koordinate1, Point3D koordinate2)
         {
-            foreach (Palica p in palice)
+            foreach (Palica p in base.Items)
             {
                 if (p.clenek1.koordinate == koordinate1 && p.clenek2.koordinate == koordinate2 ||
                     p.clenek1.koordinate == koordinate2 && p.clenek2.koordinate == koordinate1)
@@ -98,7 +116,7 @@ namespace Palicje_MKE.lib.MKE
 
         public bool PalicaObstaja(string imeKoordinate1, string imeKoordinate2)
         {
-            foreach (Palica p in palice)
+            foreach (Palica p in base.Items)
             {
                 if (p.ime == $"{imeKoordinate1}{imeKoordinate2}" ||
                     p.ime == $"{imeKoordinate2}{imeKoordinate1}")
@@ -109,7 +127,7 @@ namespace Palicje_MKE.lib.MKE
 
         public Palica PridobiPalico(Point3D koordinate1, Point3D koordinate2)
         {
-            foreach (Palica p in palice)
+            foreach (Palica p in base.Items)
             {
                 if (p.clenek1.koordinate == koordinate1 && p.clenek2.koordinate == koordinate2 ||
                     p.clenek1.koordinate == koordinate2 && p.clenek2.koordinate == koordinate1)
@@ -120,7 +138,7 @@ namespace Palicje_MKE.lib.MKE
 
         public Palica PridobiPalico(string imeKoordinate1, string imeKoordinate2)
         {
-            foreach (Palica p in palice)
+            foreach (Palica p in base.Items)
             {
                 if (p.ime == $"{imeKoordinate1}{imeKoordinate2}" ||
                     p.ime == $"{imeKoordinate2}{imeKoordinate1}")
@@ -136,7 +154,7 @@ namespace Palicje_MKE.lib.MKE
                 App.sporocilo.SetError($"Palica {p.ime} že obstaja!");
                 return false;
             }
-            palice.Add(p);
+            base.Add(p);
             App.sporocilo.SetText($"Dodana je bila palica {p.ime}");
             return true;
         }
@@ -144,7 +162,7 @@ namespace Palicje_MKE.lib.MKE
         public void OdstraniPalico(Point3D koordinate1, Point3D koordinate2)
         {
             Palica p = PridobiPalico(koordinate1, koordinate2);
-            palice.Remove(p);
+            base.Remove(p);
             /*
              foreach palica.ime that contains clenek.ime = remove
              

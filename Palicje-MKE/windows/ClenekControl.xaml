@@ -30,9 +30,9 @@
             <TextBlock Text="X:" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Right" Width="25"/>
             <TextBlock Text="Y:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
             <TextBlock Text="Z:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2"/>
-            <TextBox Name="X" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Text="0" LostFocus="GetKoordinate" />
-            <TextBox Name="Y" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="1" Text="0" LostFocus="GetKoordinate" />
-            <TextBox Name="Z" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="2" Text="0" LostFocus="GetKoordinate" />
+            <TextBox Name="X" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Text="0" TextChanged="GetKoordinate" />
+            <TextBox Name="Y" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="1" Text="0" TextChanged="GetKoordinate" />
+            <TextBox Name="Z" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="2" Text="0" TextChanged="GetKoordinate" />
             <TextBlock Text="mm" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <TextBlock Text="mm" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <TextBlock Text="mm" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>

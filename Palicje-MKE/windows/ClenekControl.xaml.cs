@@ -68,6 +68,7 @@ namespace Palicje_MKE.windows
 
         private void GetKoordinate(object sender, RoutedEventArgs e)
         {
+            if (clenek == null) return;
             TextBox tb = sender as TextBox;
             try
             {

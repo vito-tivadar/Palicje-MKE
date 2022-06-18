@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Palicje_MKE.lib
+namespace Palicje_MKE.lib.Other
 {
     public class Nastavitve
     {

@@ -13,6 +13,6 @@ namespace Palicje_MKE
     /// </summary>
     public partial class App : Application
     {
-        public static Palicje_MKE.lib.ProgramskoSporocilo sporocilo = new Palicje_MKE.lib.ProgramskoSporocilo();
+        public static Palicje_MKE.lib.Other.ProgramskoSporocilo sporocilo = new Palicje_MKE.lib.Other.ProgramskoSporocilo();
     }
 }

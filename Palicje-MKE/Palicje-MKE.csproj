@@ -90,8 +90,8 @@
     <Compile Include="lib\NadzorujObjekt.cs" />
     <Compile Include="lib\MKE\Palica.cs" />
     <Compile Include="lib\MKE\Clenek.cs" />
-    <Compile Include="lib\Nastavitve.cs" />
-    <Compile Include="lib\ProgramskoSporocilo.cs" />
+    <Compile Include="lib\Other\Nastavitve.cs" />
+    <Compile Include="lib\Other\ProgramskoSporocilo.cs" />
     <Compile Include="windows\ClenekControl.xaml.cs">
       <DependentUpon>ClenekControl.xaml</DependentUpon>
     </Compile>
@@ -103,6 +103,12 @@
     </Compile>
     <Compile Include="windows\PalicaControl.xaml.cs">
       <DependentUpon>PalicaControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\PosodobiClenek.xaml.cs">
+      <DependentUpon>PosodobiClenek.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\PosodobiPalico.xaml.cs">
+      <DependentUpon>PosodobiPalico.xaml</DependentUpon>
     </Compile>
     <Page Include="windows\DodajClenek.xaml">
       <SubType>Designer</SubType>
@@ -129,6 +135,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="windows\PalicaControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\PosodobiClenek.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\PosodobiPalico.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

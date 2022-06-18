@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Palicje_MKE.lib
+namespace Palicje_MKE.lib.Other
 {
     public class ProgramskoSporocilo : NadzorujObjekt
     {

@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="Palicje_MKE.windows.PosodobiPalico"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Palicje_MKE.windows"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="150" Background="White">
+    <Grid>
+        <local:PalicaControl x:Name="palicaControl" VerticalAlignment="Top"/>
+        <Button Content="Odstrani palico" Margin="8,0,8,8" VerticalAlignment="Bottom" Height="24" Click="OdstraniPalico_Click"/>
+    </Grid>
+</UserControl>

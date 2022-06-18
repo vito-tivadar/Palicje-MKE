@@ -35,8 +35,8 @@ namespace Palicje_MKE.windows
 
         private void OK_button_Click(object sender, RoutedEventArgs e)
         {
-            clenek1 = palicaControl.prviClenek.Text;
-            clenek2 = palicaControl.drugiClenek.Text;
+            clenek1 = palicaControl.prviClenek.SelectedItem.ToString();
+            clenek2 = palicaControl.drugiClenek.SelectedItem.ToString();
             if (clenek1 == "" || clenek2 == "" || clenek1 == clenek2) this.DialogResult = false;
             else this.DialogResult = true;
             this.Close();

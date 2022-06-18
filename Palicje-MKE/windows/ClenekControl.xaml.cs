@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-
-using Palicje_MKE.lib.MKE;
 using System.Windows.Media.Media3D;
-using HelixToolkit.Wpf;
+using Palicje_MKE.lib;
+using Palicje_MKE.lib.MKE;
+
+using Newtonsoft.Json;
+using System.IO;
 
 
 namespace Palicje_MKE.windows
@@ -15,8 +17,9 @@ namespace Palicje_MKE.windows
     public partial class ClenekControl : UserControl
     {
         public Clenek clenek;
-        public SphereVisual3D sphere;
-        private Palica[] povezanePalice;
+        public Point3D prejsnjeKoordinate;
+        public Podpora prejsnjaPodpora;
+        public ModelKonstrukcije konstrukcija;
 
         public ClenekControl()
         {
@@ -24,71 +27,72 @@ namespace Palicje_MKE.windows
             clenek = new Clenek(new Point3D(0,0,0), new Podpora());
         }
 
-        public void PrikaziOdstraniClenek()
-        {
-            OdstraniClenek_button.Visibility = Visibility.Visible;
-            //clenek = null;
-        }
-
-        public void SetClenek(Clenek clenek, SphereVisual3D sphere)
+        public void SetClenek(Clenek clenek)
         {
             this.clenek = clenek;
-            this.sphere = sphere;
-            SetKoordinate();
+            prejsnjeKoordinate = clenek.koordinate;
+            prejsnjaPodpora = clenek.podpora;
 
-            //when you change checkboxes it triggers on checked event and disables wrong checkboxes
-            X_checkBox.IsChecked = clenek.podpora.X;
-            Y_checkBox.IsChecked = clenek.podpora.Y;
-            Z_checkBox.IsChecked = clenek.podpora.Z;
+            PosodobiPolja();
+        }
 
-            if( clenek.podpora.X == false &&
-                clenek.podpora.Y == false &&
-                clenek.podpora.Z == false)
-                Podpora_checkbox.IsChecked = false;
-            else Podpora_checkbox.IsChecked = true;
+        public void RazveljaviSpremembe()
+        {
+            clenek.koordinate = prejsnjeKoordinate;
+            clenek.podpora = prejsnjaPodpora;
+
+            PosodobiPolja();
         }
         
         public Clenek GetClenek()
         {
             return clenek;
         }
-        
-        public void ClearClenek()
-        {
-            clenek = null;
-            sphere = null;
-        }
-        
-        private void SetKoordinate()
+
+        private void PosodobiPolja()
         {
             X.Text = clenek.koordinate.X.ToString();
             Y.Text = clenek.koordinate.Y.ToString();
             Z.Text = clenek.koordinate.Z.ToString();
+
+            X_checkBox.IsChecked = clenek.podpora.X;
+            Y_checkBox.IsChecked = clenek.podpora.Y;
+            Z_checkBox.IsChecked = clenek.podpora.Z;
         }
 
-        private void GetKoordinate(object sender, RoutedEventArgs e)
+        private void PosodobiClenek(object sender, RoutedEventArgs e)
         {
             if (clenek == null) return;
-            TextBox tb = sender as TextBox;
+            Point3D p;
             try
             {
-                switch (tb.Name)
-                {
-                    case "X":
-                        clenek.PosodobiX(Convert.ToDouble(X.Text));
-                        break;
-                    case "Y":
-                        clenek.PosodobiY(Convert.ToDouble(Y.Text));
-                        break;
-                    case "Z":
-                        clenek.PosodobiZ(Convert.ToDouble(Z.Text));
-                        break;
-                }
-                if(sphere != null) sphere.Center = clenek.koordinate;
+                p = new Point3D(Convert.ToDouble(X.Text), Convert.ToDouble(Y.Text), Convert.ToDouble(Z.Text));
             }
             catch
             {
+                RazveljaviSpremembe();
                 App.sporocilo.SetError("Koordinate morajo biti številčne vrednosti.");
+                return;
+            }
+
+            if (konstrukcija == null)
+            {
+                clenek.koordinate = p;
+                prejsnjeKoordinate = p;
+                clenek.PosodobiPrejsnjeIme();
+                return;
+            }
+            else 
+            {
+                if (konstrukcija.clenki.Pridobi(p) != null)
+                {
+                    App.sporocilo.SetError($"Členek s koordinatami ({p}) že obstaja. :)");
+                    RazveljaviSpremembe();
+                    return;
+                }
+                clenek.koordinate = p;
+                prejsnjeKoordinate = p;
+                konstrukcija.PosodobiVisualClenek(clenek);
             }
         }
 
@@ -99,21 +103,9 @@ namespace Palicje_MKE.windows
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)
         {
-            if ((bool)Podpora_checkbox.IsChecked)
-            {
-                clenek.podpora.X = (bool)X_checkBox.IsChecked;
-                clenek.podpora.Y = (bool)Y_checkBox.IsChecked;
-                clenek.podpora.Z = (bool)Z_checkBox.IsChecked;
-
-            }
-            else
-            {
-                clenek.podpora.X = false;
-                clenek.podpora.Y = false;
-                clenek.podpora.Z = false;
-            }
+            clenek.podpora.X = (bool)X_checkBox.IsChecked;
+            clenek.podpora.Y = (bool)Y_checkBox.IsChecked;
+            clenek.podpora.Z = (bool)Z_checkBox.IsChecked;
         }
-
-        ///DODAJ ZA PODPORO;
     }
 }

@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
+using Palicje_MKE.lib;
+using Palicje_MKE.lib.MKE;
+using System.Windows.Media.Media3D;
 
 namespace Palicje_MKE.windows
 {
@@ -20,6 +10,12 @@ namespace Palicje_MKE.windows
     /// </summary>
     public partial class PalicaControl : UserControl
     {
+        public ModelKonstrukcije konstrukcija;
+        public Palica palica;
+        public string imePalice;
+        private Clenek prejsnjiClenek1;
+        private Clenek prejsnjiClenek2;
+
         private string[] _imenaDodanihPalic;
         public string[] imenaDodanihPalic
         {
@@ -34,19 +30,73 @@ namespace Palicje_MKE.windows
         public PalicaControl()
         {
             InitializeComponent();
+            imePalice = "";
         }
-
-        public void PrikaziOdstraniPalico()
+        public string GetImePalice()
         {
-            OdstraniPalico_button.Visibility = Visibility.Visible;
+            imePalice = prviClenek.SelectedItem.ToString() + drugiClenek.SelectedItem.ToString();
+            return imePalice;
         }
 
-        private void OdstraniPalico_button_Click(object sender, RoutedEventArgs e)
+        public void SetPalica(Palica palica)
         {
+            this.palica = palica;
+            prejsnjiClenek1 = palica.clenek1;
+            prejsnjiClenek2 = palica.clenek2;
+            imenaDodanihPalic = konstrukcija.clenki.PridobiImena();
 
+            PosodobiPolja();
         }
 
-        public void PosodobiCombobox(string[] imenaClenkov)
+        public void RazveljaviSpremembe()
+        {
+            palica.clenek1 = prejsnjiClenek1;
+            palica.clenek2 = prejsnjiClenek2;
+
+            PosodobiPolja();
+        }
+
+        private void PosodobiPolja()
+        {
+            prviClenek.SelectedItem = prejsnjiClenek1.ime;
+            drugiClenek.SelectedItem = prejsnjiClenek2.ime;
+        }
+
+        private void PosodobiPalico(object sender, SelectionChangedEventArgs e)
+        {
+            if (prviClenek.SelectedItem == null || drugiClenek.SelectedItem == null) return;
+            if (palica == null || konstrukcija == null) return;
+
+            string imeKoordinate1 = prviClenek.SelectedItem.ToString();
+            string imeKoordinate2 = drugiClenek.SelectedItem.ToString();
+
+            if(imeKoordinate1 == palica.clenek1.ime && imeKoordinate2 == palica.clenek2.ime) return;
+
+            if (imeKoordinate1 == imeKoordinate2)
+            {
+                App.sporocilo.SetError($"Palica ne more povezovati iste koordinate.");
+                RazveljaviSpremembe();
+                return;
+            }
+
+            if(konstrukcija.palice.PalicaObstaja(imeKoordinate1, imeKoordinate2))
+            {
+                App.sporocilo.SetError($"Palica ki povezije členka: {imeKoordinate1} in {imeKoordinate2}, že obstaja.");
+                RazveljaviSpremembe();
+                return;
+            }
+
+            Clenek c = konstrukcija.clenki.Pridobi(imeKoordinate1);
+            palica.clenek1 = konstrukcija.clenki.Pridobi(imeKoordinate1);
+            palica.clenek2 = konstrukcija.clenki.Pridobi(imeKoordinate2);
+            
+            ComboBox cb = sender as ComboBox;
+            if (cb.Name == "prviClenek") konstrukcija.PosodobiVisualPalico(palica.clenek1, prejsnjiClenek1.ime);
+            else konstrukcija.PosodobiVisualPalico(palica.clenek2, prejsnjiClenek2.ime);
+        }
+
+
+        private void PosodobiCombobox(string[] imenaClenkov)
         {
             prviClenek.Items.Clear();
             drugiClenek.Items.Clear();
@@ -57,7 +107,11 @@ namespace Palicje_MKE.windows
                 drugiClenek.Items.Add(imeClenka);
             }
 
-
+            if(palica == null)
+            {
+                prviClenek.SelectedItem = prviClenek.Items[0];
+                drugiClenek.SelectedItem = drugiClenek.Items[1];
+            }
         }
     }
 }

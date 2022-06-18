@@ -15,6 +15,7 @@ namespace Palicje_MKE.lib.MKE
             set
             {
                 _koordinate = value;
+                PosodobiIme();
                 OnPropertyChanged();
             }
         }
@@ -30,12 +31,17 @@ namespace Palicje_MKE.lib.MKE
             this._koordinate = koordinate;
             this.podpora = podpora;
             PosodobiIme();
+            this.prejsnjeIme = this.ime;
         }
 
         private void PosodobiIme()
         {
+            this.ime = $"({this.koordinate})";
+        }
+        
+        public void PosodobiPrejsnjeIme()
+        {
             this.prejsnjeIme = this.ime;
-            this.ime = $"({this.koordinate.X},{this.koordinate.Y},{this.koordinate.Z})";
         }
 
         public void PosodobiX(double x)
@@ -75,20 +81,13 @@ namespace Palicje_MKE.lib.MKE
 
 
 
-    public class Clenki
+    public class Clenki : Collection<Clenek>
     {
-        public Collection<Clenek> clenki;       // private in pridobi z get()
-
         // <ht:BillboardTextVisual3D Position = "5,0,0" Text="5,0,0" DepthOffset="0.01"/>
-
-        public Clenki()
-        {
-            clenki = new Collection<Clenek>();
-        }
 
         public bool ClenekObstaja(Point3D koordinate)
         {
-            foreach (Clenek c in clenki)
+            foreach (Clenek c in base.Items)
             {
                 if (c.koordinate == koordinate) return true;
             }
@@ -97,18 +96,27 @@ namespace Palicje_MKE.lib.MKE
 
         public bool ClenekObstaja(string ime)
         {
-            foreach (Clenek c in clenki)
+            foreach (Clenek c in base.Items)
             {
                 if (c.ime == ime) return true;
             }
             return false;
         }
 
-        public Clenek PridobiClenek(Point3D koordinate)
+        public Clenek Pridobi(Point3D koordinate)
         {
-            foreach (Clenek c in clenki)
+            foreach (Clenek c in base.Items)
             {
                 if (c.koordinate == koordinate) return c;
+            }
+            return null;
+        }
+        
+        public Clenek Pridobi(string ime)
+        {
+            foreach (Clenek c in base.Items)
+            {
+                if (c.ime == ime) return c;
             }
             return null;
         }
@@ -116,10 +124,10 @@ namespace Palicje_MKE.lib.MKE
         public string[] PridobiImena()
         {
 
-            string[] imena = new string[clenki.Count];
-            for (int i = 0; i < clenki.Count; i++)
+            string[] imena = new string[base.Items.Count];
+            for (int i = 0; i < base.Items.Count; i++)
             {
-                imena[i] = clenki[i].ime;
+                imena[i] = base.Items[i].ime;
             }
             return imena;
         }
@@ -131,15 +139,41 @@ namespace Palicje_MKE.lib.MKE
                 App.sporocilo.SetError($"Členek s koordinatami {c.ime} že obstaja!");
                 return false;
             }
-            clenki.Add(c);
+            base.Items.Add(c);
             App.sporocilo.SetText($"Dodan je bil členek s koordinatami {c.ime}");
             return true;
         }
 
+        public bool Posodobi(Clenek clenek)
+        {
+            if(ClenekObstaja(clenek.koordinate) == false)
+            {
+                App.sporocilo.SetError($"Clenek s koordinatami {clenek.ime} že obstaja :(");
+                return false;
+            }
+            int i = 0;
+            foreach (Clenek c in base.Items)
+            {
+                Console.WriteLine("---------------------------");
+                Console.WriteLine(base.Items);
+                Console.WriteLine(base.Items[i].koordinate);
+                Console.WriteLine("---------------------------");
+                if(c.ime == clenek.prejsnjeIme)
+                {
+                    c.koordinate = clenek.koordinate;
+                    return true;
+                }
+                i++;
+            }
+
+            return false;
+
+        }
+
         public void OdstraniClenek(Point3D koordinate)
         {
-            Clenek c = PridobiClenek(koordinate);
-            clenki.Remove(c);
+            Clenek c = Pridobi(koordinate);
+            base.Items.Remove(c);
         }
 
 

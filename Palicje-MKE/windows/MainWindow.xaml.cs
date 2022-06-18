@@ -28,10 +28,9 @@ namespace Palicje_MKE
             DataContext = this;
             InitializeComponent();
 
-            clenekControl.PrikaziOdstraniClenek();
-            palicaControl.PrikaziOdstraniPalico();
-
             konstrukcija = new ModelKonstrukcije();
+            posodobiClenek.DodajModelKonstrukcije(konstrukcija);
+            posodobiPalico.DodajModelKonstrukcije(konstrukcija);
 
             viewportModel.Children.Add(konstrukcija.visualModel);
 
@@ -57,9 +56,14 @@ namespace Palicje_MKE
         private void DodajClenek_Click(object sender, RoutedEventArgs e)
         {
             DodajClenek dc = new DodajClenek();
-            if(dc.ShowDialog() == true)
+            if (dc.ShowDialog() == true)
             {
-                konstrukcija.DodajClenek(dc.clenek);
+                if (konstrukcija.DodajClenek(dc.clenek))
+                {
+                    posodobiPalico.Visibility = Visibility.Collapsed;
+                    posodobiClenek.Visibility = Visibility.Visible;
+                    posodobiClenek.SetClenek(dc.clenek);
+                }
                 return;
             }
 
@@ -68,7 +72,7 @@ namespace Palicje_MKE
 
         private void DodajPalico_Click(object sender, RoutedEventArgs e)
         {
-            if (konstrukcija.clenki.clenki.Count < 2)
+            if (konstrukcija.clenki.Count < 2)
             {
                 App.sporocilo.SetError("Za dodajanje palice morata biti dodana vsaj 2 členka.");
                 return;
@@ -77,8 +81,13 @@ namespace Palicje_MKE
             dp.DodajSeznamImen(konstrukcija.clenki.PridobiImena());
             if (dp.ShowDialog() == true)
             {
-                Palica p = new Palica(konstrukcija.GetClenek(dp.clenek1), konstrukcija.GetClenek(dp.clenek2));
-                konstrukcija.DodajPalico(p);
+                Palica p = new Palica(konstrukcija.clenki.Pridobi(dp.clenek1), konstrukcija.clenki.Pridobi(dp.clenek2));
+                if (konstrukcija.DodajPalico(p))
+                {
+                    posodobiClenek.Visibility = Visibility.Collapsed;
+                    posodobiPalico.Visibility = Visibility.Visible;
+                    posodobiPalico.SetPalica(p);
+                };
                 return;
             }
             App.sporocilo.SetText($"Dodajanje palice je bilo preklicano.");
@@ -106,8 +115,11 @@ namespace Palicje_MKE
             var firstHit = vp.Viewport.FindHits(e.GetPosition(vp)).FirstOrDefault();
             if (firstHit == null)
             {
-                clenekControl.Visibility = Visibility.Collapsed;
-                palicaControl.Visibility = Visibility.Collapsed;
+                posodobiClenek.Visibility = Visibility.Collapsed;
+                posodobiPalico.Visibility = Visibility.Collapsed;
+                //posodobiClenek.SetClenek(null);
+                //posodobiPalico.SetName("");
+
 
                 App.sporocilo.SetText("null");
                 return;
@@ -117,16 +129,15 @@ namespace Palicje_MKE
             
             if (visualType == typeof(SphereVisual3D))
             {
-                palicaControl.Visibility = Visibility.Collapsed;
-                clenekControl.Visibility = Visibility.Visible;
-
                 SphereVisual3D sphere = firstHit.Visual as SphereVisual3D;
                 App.sporocilo.SetText($"Izbran je členek: {sphere.GetName()}");
 
-                Clenek c = konstrukcija.GetClenek(sphere.GetName());
+                Clenek c = konstrukcija.clenki.Pridobi(sphere.GetName());
                 if (c != null)
                 {
-                    clenekControl.SetClenek(c, sphere);
+                    posodobiClenek.SetClenek(c);
+                    posodobiPalico.Visibility = Visibility.Collapsed;
+                    posodobiClenek.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -138,11 +149,18 @@ namespace Palicje_MKE
 
             if (visualType == typeof(PipeVisual3D))
             {
-                clenekControl.Visibility = Visibility.Collapsed;
-                palicaControl.Visibility = Visibility.Visible;
+                
 
                 PipeVisual3D pipe = firstHit.Visual as PipeVisual3D;
                 App.sporocilo.SetText($"palica: c1:{pipe.Point1} c2:{pipe.Point2}");
+
+                Palica p = konstrukcija.palice.Pridobi(pipe.Point1, pipe.Point2);
+                if (p != null)
+                {
+                    posodobiPalico.SetPalica(p);
+                    posodobiClenek.Visibility = Visibility.Collapsed;
+                    posodobiPalico.Visibility = Visibility.Visible;
+                }
 
                 // pipe.Point1 = new Point3D(5, 5, 5);
                 return;

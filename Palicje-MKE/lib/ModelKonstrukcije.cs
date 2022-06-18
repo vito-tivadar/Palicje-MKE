@@ -22,14 +22,12 @@ namespace Palicje_MKE.lib
             visualModel = new ModelVisual3D();
         }
 
-
-
-
-
-
+        private bool konstrukcijaChanged = false;
         public void PocistiElemente()
         {
             visualModel = new ModelVisual3D();
+            clenki.Clear();
+            palice.Clear();
         }
 
         public void UndoLast()
@@ -39,14 +37,14 @@ namespace Palicje_MKE.lib
             {
                 visualModel.Children.RemoveAt(visualModel.Children.Count - 1);
                 OnPropertyChanged(nameof(visualModel));
+                konstrukcijaChanged = true;
             }
         }
 
-        public void DodajClenek(Clenek clenek)
+        public bool DodajClenek(Clenek clenek)
         {
             if (clenki.Dodaj(clenek))
             {
-                clenek.ClenekUpdated += PosodobiVisualPalico;
 
                 SphereVisual3D visualClenek = new SphereVisual3D();
                 visualClenek.Center = clenek.koordinate;
@@ -55,10 +53,13 @@ namespace Palicje_MKE.lib
 
                 visualModel.Children.Add(visualClenek);
                 OnPropertyChanged(nameof(visualModel));
+                konstrukcijaChanged = true;
+                return true;
             }
+            return false;
         }
 
-        public void DodajPalico(Palica palica)
+        public bool DodajPalico(Palica palica)
         {
             if (palice.Dodaj(palica))
             {
@@ -69,40 +70,75 @@ namespace Palicje_MKE.lib
                 visualPalica.Diameter = 0.14;
                 visualPalica.SetName(palica.ime);
 
-                palica.DodajlPalico3D(visualPalica);
                 visualModel.Children.Add(visualPalica);
                 OnPropertyChanged(nameof(visualModel));
+                konstrukcijaChanged = true;
+                return true;
             }
+            return false;
             
         }
 
-        public Clenek GetClenek(string ime)
+        public void PosodobiVisualClenek(Clenek c)
         {
-            foreach (Clenek c in clenki.clenki)
+            string prejsnjeIme = c.prejsnjeIme;
+
+            foreach (Visual3D visual in visualModel.Children)
             {
-                if(c.ime == ime) return c;
+                if(visual.GetName() == prejsnjeIme)
+                {
+                    SphereVisual3D clenek = visual as SphereVisual3D;
+                    clenek.Center = c.koordinate;
+                    c.PosodobiPrejsnjeIme();
+                    clenek.SetName(c.ime);
+                    continue;
+                }
+                if (visual.GetName().StartsWith(prejsnjeIme))
+                {
+                    PipeVisual3D palica = visual as PipeVisual3D;
+                    palica.Point1 = c.koordinate;
+                    c.PosodobiPrejsnjeIme();
+                    System.Console.WriteLine(c.prejsnjeIme);
+                    palica.SetName($"({palica.Point1})({palica.Point2})");
+                    continue;
+                }
+                if (visual.GetName().EndsWith(prejsnjeIme))
+                {
+                    PipeVisual3D palica = visual as PipeVisual3D;
+                    palica.Point2 = c.koordinate;
+                    c.PosodobiPrejsnjeIme();
+                    System.Console.WriteLine(c.prejsnjeIme);
+                    palica.SetName($"({palica.Point1})({palica.Point2})");
+                    continue;
+                }
             }
-            return null;
         }
 
-        private void PosodobiVisualPalico(object sender, ClenekEventArgs e)
+        public void PosodobiVisualPalico(Clenek c, string prejsnjeIme)
         {
-            string ime = e.clenek.prejsnjeIme;
-            /*
-            foreach (Visual3D item in collection)
+            foreach (Visual3D visual in visualModel.Children)
             {
-
+                if (visual.GetType() != typeof(PipeVisual3D)) continue;
+                if (visual.GetName().StartsWith(prejsnjeIme))
+                {
+                    PipeVisual3D palica = visual as PipeVisual3D;
+                    palica.Point1 = c.koordinate;
+                    c.PosodobiPrejsnjeIme();
+                    System.Console.WriteLine(c.prejsnjeIme);
+                    palica.SetName($"({palica.Point1})({palica.Point2})");
+                    continue;
+                }
+                if (visual.GetName().EndsWith(prejsnjeIme))
+                {
+                    PipeVisual3D palica = visual as PipeVisual3D;
+                    palica.Point2 = c.koordinate;
+                    c.PosodobiPrejsnjeIme();
+                    System.Console.WriteLine(c.prejsnjeIme);
+                    palica.SetName($"({palica.Point1})({palica.Point2})");
+                    continue;
+                }
             }
-            */
-
         }
-
-        public void FindElementsWithPoint(Point3D koordinate)
-        {
-            
-        }
-
-
 
         public Material NovMaterial(Color color)
         {

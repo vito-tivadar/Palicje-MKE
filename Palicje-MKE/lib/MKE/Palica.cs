@@ -5,50 +5,31 @@ using HelixToolkit.Wpf;
 
 namespace Palicje_MKE.lib.MKE
 {
-    public class Palica : NadzorujObjekt
+    public class Palica
     {
-        private PipeVisual3D palicaVisual3D = new PipeVisual3D();
-
         private Clenek _clenek1;
         public Clenek clenek1
         {
             get { return _clenek1; }
             set
-            {
-                _clenek1 = value;
-                OnPropertyChanged();
-            }
+            { _clenek1 = value; }
         }
 
         private Clenek _clenek2;
         public Clenek clenek2
         {
             get { return _clenek2; }
-            set
-            { 
-                _clenek2 = value;
-                OnPropertyChanged();
-            }
+            set { _clenek2 = value; }
         }
         private string _ime;
 
         public string ime
         {
             get { return clenek1.ime + clenek2.ime; }
-            set
-            {
-                _ime = value;
-                OnPropertyChanged();
-            }
+            set { _ime = value; }
         }
 
-
-        private double _dolzina;
-
-        public double dolzina
-        {
-            get { return PreracunajDolzino(); }
-        }
+        public double dolzina { get { return PreracunajDolzino(); } }
 
         public double ploscinaPrereza;
         public double modulElasticnosti;
@@ -58,7 +39,6 @@ namespace Palicje_MKE.lib.MKE
             this.clenek1 = clenek1;
             this.clenek2 = clenek2;
             /* 
-            _dolzina = PreracunajDolzino(clenek 1.koordinate, clenek2.koordinate);                  //dodaj preračun glede na koordinate
             _ploscinaPrereza = ploscinaPrereza;             
             _modulElasticnosti = modulElasticnosti;
             */
@@ -71,11 +51,6 @@ namespace Palicje_MKE.lib.MKE
         private void PosodobiDrugiClenek(object sender, EventArgs e)
         {
             clenek2 = sender as Clenek;
-        }
-
-        public void DodajlPalico3D(PipeVisual3D palica3D)
-        {
-            palicaVisual3D = palica3D;
         }
 
         public double PreracunajDolzino()
@@ -95,14 +70,8 @@ namespace Palicje_MKE.lib.MKE
 
 
 
-    public class Palice : ObservableCollection<Palica>
+    public class Palice : Collection<Palica>
     {
-        public Collection<Palica> palice;  // private in pridobi z get()
-
-        public Palice()
-        {
-            palice = new Collection<Palica>();
-        }
         public bool PalicaObstaja(Point3D koordinate1, Point3D koordinate2)
         {
             foreach (Palica p in base.Items)
@@ -125,7 +94,7 @@ namespace Palicje_MKE.lib.MKE
             return false;
         }
 
-        public Palica PridobiPalico(Point3D koordinate1, Point3D koordinate2)
+        public Palica Pridobi(Point3D koordinate1, Point3D koordinate2)
         {
             foreach (Palica p in base.Items)
             {
@@ -154,20 +123,31 @@ namespace Palicje_MKE.lib.MKE
                 App.sporocilo.SetError($"Palica {p.ime} že obstaja!");
                 return false;
             }
-            base.Add(p);
+            base.Items.Add(p);
             App.sporocilo.SetText($"Dodana je bila palica {p.ime}");
             return true;
         }
 
         public void OdstraniPalico(Point3D koordinate1, Point3D koordinate2)
         {
-            Palica p = PridobiPalico(koordinate1, koordinate2);
-            base.Remove(p);
+            Palica p = Pridobi(koordinate1, koordinate2);
+            if(p != null) base.Items.Remove(p);
             /*
              foreach palica.ime that contains clenek.ime = remove
              
              
              */
+        }
+
+        public void OdstraniPaliceSKoordinato(Point3D koordinata)
+        {
+            foreach (Palica palica in base.Items)
+            {
+                if(palica.clenek1.koordinate == koordinata || palica.clenek2.koordinate == koordinata)
+                {
+                    base.Items.Remove(palica);
+                }
+            }
         }
 
 

@@ -120,9 +120,6 @@ namespace Palicje_MKE
             {
                 posodobiClenek.Visibility = Visibility.Collapsed;
                 posodobiPalico.Visibility = Visibility.Collapsed;
-                //posodobiClenek.SetClenek(null);
-                //posodobiPalico.SetName("");
-
 
                 App.sporocilo.SetText("null");
                 return;
@@ -169,6 +166,11 @@ namespace Palicje_MKE
                 return;
             }
 
+        }
+
+        private void CameraFit_Click(object sender, RoutedEventArgs e)
+        {
+            App.kamera.Prilagodi();
         }
     }
 }

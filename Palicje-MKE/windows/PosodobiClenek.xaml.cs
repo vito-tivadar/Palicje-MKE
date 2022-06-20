@@ -23,7 +23,11 @@ namespace Palicje_MKE.windows
         
         private void OdstraniClenek_Click(object sender, RoutedEventArgs e)
         {
-            //konstrukcija.OdstraniClenek(clenekControl.clenek);
+            Clenek c = clenekControl.clenek;
+            clenekControl.konstrukcija.clenki.Odstrani(c);
+            clenekControl.konstrukcija.palice.Odstrani(c.koordinate);
+            clenekControl.konstrukcija.OdstraniVisualElement(c.ime);
+            this.Visibility = Visibility.Collapsed;
         }
 
         public void SetClenek(Clenek c)

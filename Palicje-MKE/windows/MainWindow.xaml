@@ -111,6 +111,12 @@
                         Orthographic="True"
                     -->
                 </ht:HelixViewport3D>
+                <Button Width="24" Height="24" Background="Transparent" BorderBrush="Transparent"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0"
+                ToolTip="Prikaži vse elemente" Click="CameraFit_Click">
+                    <Image Source="/Resources/icons8-arrow-64.png" />
+                </Button>
+                
                 <Button Visibility="Hidden" Width="32" Height="32" Background="Transparent" BorderBrush="Transparent"
                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,3,0"
                 ToolTip="Nastavitve 3D Pogleda">

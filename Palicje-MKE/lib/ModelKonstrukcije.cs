@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Media.Media3D;
 using System.Windows.Media;
 using Palicje_MKE.lib.MKE;
+using System;
 
 namespace Palicje_MKE.lib
 {
@@ -49,6 +50,7 @@ namespace Palicje_MKE.lib
                 SphereVisual3D visualClenek = new SphereVisual3D();
                 visualClenek.Center = clenek.koordinate;
                 visualClenek.Radius = 0.20;
+                visualClenek.Material = NovMaterial("3498db");
                 visualClenek.SetName(clenek.ime);
 
                 visualModel.Children.Add(visualClenek);
@@ -67,8 +69,8 @@ namespace Palicje_MKE.lib
                 PipeVisual3D visualPalica = new PipeVisual3D();
                 visualPalica.Point1 = palica.clenek1.koordinate;
                 visualPalica.Point2 = palica.clenek2.koordinate;
-                visualPalica.Diameter = 0.14;
-                visualPalica.Material = NovMaterial(Colors.Orange);
+                visualPalica.Diameter = 0.20;
+                visualPalica.Material = Materials.Orange;
 
                 visualPalica.SetName(palica.ime);
 
@@ -100,7 +102,6 @@ namespace Palicje_MKE.lib
                     PipeVisual3D palica = visual as PipeVisual3D;
                     palica.Point1 = c.koordinate;
                     c.PosodobiPrejsnjeIme();
-                    System.Console.WriteLine(c.prejsnjeIme);
                     palica.SetName($"({palica.Point1})({palica.Point2})");
                     continue;
                 }
@@ -109,7 +110,6 @@ namespace Palicje_MKE.lib
                     PipeVisual3D palica = visual as PipeVisual3D;
                     palica.Point2 = c.koordinate;
                     c.PosodobiPrejsnjeIme();
-                    System.Console.WriteLine(c.prejsnjeIme);
                     palica.SetName($"({palica.Point1})({palica.Point2})");
                     continue;
                 }
@@ -126,7 +126,6 @@ namespace Palicje_MKE.lib
                     PipeVisual3D palica = visual as PipeVisual3D;
                     palica.Point1 = c.koordinate;
                     c.PosodobiPrejsnjeIme();
-                    System.Console.WriteLine(c.prejsnjeIme);
                     palica.SetName($"({palica.Point1})({palica.Point2})");
                     continue;
                 }
@@ -135,16 +134,38 @@ namespace Palicje_MKE.lib
                     PipeVisual3D palica = visual as PipeVisual3D;
                     palica.Point2 = c.koordinate;
                     c.PosodobiPrejsnjeIme();
-                    System.Console.WriteLine(c.prejsnjeIme);
                     palica.SetName($"({palica.Point1})({palica.Point2})");
                     continue;
                 }
             }
         }
 
-        public Material NovMaterial(Color color)
+        public void OdstraniVisualElement(string ImeElementa)
         {
-            return MaterialHelper.CreateMaterial(color);
+            Collection<Visual3D> visualElements = new Collection<Visual3D>();
+
+            foreach (Visual3D visual in visualModel.Children)  if (visual.GetName().Contains(ImeElementa)) visualElements.Add(visual);
+
+            foreach (Visual3D visual in visualElements) visualModel.Children.Remove(visual);
+        }
+
+        public Material NovMaterial(string colorHEX)
+        {
+            //Console.WriteLine(colorHEX.Length != 6);
+            //Console.WriteLine(colorHEX.Length != 3);
+            if (colorHEX.Length != 6 && colorHEX.Length != 3) return Materials.Black;
+            Material material;
+            try
+            {
+                Color color = (Color)ColorHelper.HexToColor("#" + colorHEX);
+                material = MaterialHelper.CreateMaterial(color);
+                return material;
+            }
+            catch (Exception e)
+            {
+                return Materials.Black;
+            }
+
         }
     }
 }

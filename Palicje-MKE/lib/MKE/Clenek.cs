@@ -162,10 +162,15 @@ namespace Palicje_MKE.lib.MKE
 
         }
 
-        public void OdstraniClenek(Point3D koordinate)
+        public void Odstrani(Point3D koordinate)
         {
             Clenek c = Pridobi(koordinate);
-            base.Items.Remove(c);
+            if (c != null) base.Items.Remove(c);
+        }
+        
+        public void Odstrani(Clenek c)
+        {
+            if (c != null) base.Items.Remove(c);
         }
 
 

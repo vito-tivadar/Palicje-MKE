@@ -60,7 +60,7 @@ namespace Palicje_MKE.lib.MKE
 
     public class Palice : Collection<Palica>
     {
-        public bool PalicaObstaja(Point3D koordinate1, Point3D koordinate2)
+        public bool Obstaja(Point3D koordinate1, Point3D koordinate2)
         {
             foreach (Palica p in base.Items)
             {
@@ -71,7 +71,7 @@ namespace Palicje_MKE.lib.MKE
             return false;
         }
 
-        public bool PalicaObstaja(string imeKoordinate1, string imeKoordinate2)
+        public bool Obstaja(string imeKoordinate1, string imeKoordinate2)
         {
             foreach (Palica p in base.Items)
             {
@@ -93,7 +93,7 @@ namespace Palicje_MKE.lib.MKE
             return null;
         }
 
-        public Palica PridobiPalico(string imeKoordinate1, string imeKoordinate2)
+        public Palica Pridobi(string imeKoordinate1, string imeKoordinate2)
         {
             foreach (Palica p in base.Items)
             {
@@ -106,7 +106,7 @@ namespace Palicje_MKE.lib.MKE
 
         public bool Dodaj(Palica p)
         {
-            if (PalicaObstaja(p.clenek1.koordinate, p.clenek2.koordinate))
+            if (Obstaja(p.clenek1.koordinate, p.clenek2.koordinate))
             {
                 App.sporocilo.SetError($"Palica {p.ime} že obstaja!");
                 return false;
@@ -116,30 +116,35 @@ namespace Palicje_MKE.lib.MKE
             return true;
         }
 
-        public void OdstraniPalico(Point3D koordinate1, Point3D koordinate2)
+        public void Odstrani(Point3D koordinate1, Point3D koordinate2)
         {
             Palica p = Pridobi(koordinate1, koordinate2);
             if(p != null) base.Items.Remove(p);
-            /*
-             foreach palica.ime that contains clenek.ime = remove
-             
-             
-             */
+        }
+        
+        public void Odstrani(Palica p)
+        {
+            if(p != null) base.Items.Remove(p);
         }
 
-        public void OdstraniPaliceSKoordinato(Point3D koordinata)
+        public void Odstrani(Point3D koordinate)
         {
+            Collection<Palica> paliceZaIzbris = new Collection<Palica>();
+
             foreach (Palica palica in base.Items)
             {
-                if(palica.clenek1.koordinate == koordinata || palica.clenek2.koordinate == koordinata)
-                {
-                    base.Items.Remove(palica);
-                }
+                if(palica.clenek1.koordinate == koordinate || palica.clenek2.koordinate == koordinate)
+                    paliceZaIzbris.Add(palica);
+            }
+
+            foreach (Palica palica in paliceZaIzbris)
+            {
+                base.Items.Remove(palica);
             }
         }
-
-
     }
+
+
 
     public class PalicaNeObstajaException : Exception
     {

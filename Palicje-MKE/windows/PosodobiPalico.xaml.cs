@@ -31,7 +31,10 @@ namespace Palicje_MKE.windows
 
         private void OdstraniPalico_Click(object sender, RoutedEventArgs e)
         {
-
+            Palica p = palicaControl.palica;
+            palicaControl.konstrukcija.palice.Odstrani(p);
+            palicaControl.konstrukcija.OdstraniVisualElement(p.ime);
+            this.Visibility = Visibility.Collapsed;
         }
         public void SetPalica(Palica p)
         {

@@ -79,7 +79,7 @@ namespace Palicje_MKE.windows
                 return;
             }
 
-            if(konstrukcija.palice.PalicaObstaja(imeKoordinate1, imeKoordinate2))
+            if(konstrukcija.palice.Obstaja(imeKoordinate1, imeKoordinate2))
             {
                 App.sporocilo.SetError($"Palica ki povezije členka: {imeKoordinate1} in {imeKoordinate2}, že obstaja.");
                 RazveljaviSpremembe();

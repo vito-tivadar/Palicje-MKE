@@ -102,6 +102,7 @@
                                     IsViewCubeEdgeClicksEnabled="True"
                                     MouseDown="helixViewport_MouseDown">
                     <ModelVisual3D x:Name="viewportModel" />
+                    <ht:DefaultLights/>
                     <!--    2D viewport
                     <ht:CoordinateSystemVisual3D/> // enable / disable
                         IsRotationEnabled="False"

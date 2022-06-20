@@ -37,6 +37,9 @@ namespace Palicje_MKE
             App.sporocilo.SetTextBlock(ProgramMessageBox);
             App.sporocilo.SetText("Program za preračun paličnih konstrukcij", Colors.CadetBlue, "Izdelal: Vito Tivadar");
 
+            App.kamera.SetViewPort(viewport3D);
+            App.kamera.RavninaXY();
+
         }
 
         public void OpenGithub(object sender, RoutedEventArgs e)

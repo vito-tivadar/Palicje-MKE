@@ -24,6 +24,7 @@ namespace Palicje_MKE.lib.Other
 
         public void SetText(string sporocilo, string tooltip = "")
         {
+            if (_tb == null) return;
             _tb.Text = sporocilo;
             _tb.ToolTip = tooltip;
             _tb.Foreground = new SolidColorBrush(Colors.Black);
@@ -32,15 +33,16 @@ namespace Palicje_MKE.lib.Other
 
         public void SetText(string sporocilo, Color color, string tooltip = "")
         {
-
+            if (_tb == null) return;
             _tb.Text = sporocilo;
             _tb.ToolTip = tooltip;
             _tb.Foreground = new SolidColorBrush(color);
             OnPropertyChanged();
         }
+
         public void SetError(string sporocilo, string tooltip = "")
         {
-
+            if (_tb == null) return;
             _tb.Text = "Napaka: " + sporocilo;
             _tb.ToolTip = tooltip;
             _tb.Foreground = new SolidColorBrush(Colors.Red);

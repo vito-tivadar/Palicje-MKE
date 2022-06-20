@@ -14,5 +14,6 @@ namespace Palicje_MKE
     public partial class App : Application
     {
         public static Palicje_MKE.lib.Other.ProgramskoSporocilo sporocilo = new Palicje_MKE.lib.Other.ProgramskoSporocilo();
+        public static Palicje_MKE.lib.Helix_Toolkit.Kamera kamera = new Palicje_MKE.lib.Helix_Toolkit.Kamera();
     }
 }

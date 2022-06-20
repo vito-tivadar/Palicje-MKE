@@ -85,7 +85,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="lib\Helix-Toolkit\Kamera.cs" />
     <Compile Include="lib\MKE\KalkulatorPaličja.cs" />
+    <Compile Include="lib\MKE\Sila.cs" />
     <Compile Include="lib\ModelKonstrukcije.cs" />
     <Compile Include="lib\NadzorujObjekt.cs" />
     <Compile Include="lib\MKE\Palica.cs" />
@@ -182,9 +184,7 @@
   <ItemGroup>
     <Resource Include="Resources\icons8-info-24.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="lib\Helix-Toolkit\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="mke-logo.ico" />
   </ItemGroup>

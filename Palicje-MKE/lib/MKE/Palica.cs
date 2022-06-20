@@ -7,22 +7,10 @@ namespace Palicje_MKE.lib.MKE
 {
     public class Palica
     {
-        private Clenek _clenek1;
-        public Clenek clenek1
-        {
-            get { return _clenek1; }
-            set
-            { _clenek1 = value; }
-        }
+        public Clenek clenek1;
+        public Clenek clenek2;
 
-        private Clenek _clenek2;
-        public Clenek clenek2
-        {
-            get { return _clenek2; }
-            set { _clenek2 = value; }
-        }
         private string _ime;
-
         public string ime
         {
             get { return clenek1.ime + clenek2.ime; }

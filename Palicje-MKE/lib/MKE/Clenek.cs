@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Palicje_MKE.lib.MKE
 {
-    public class Clenek : NadzorujObjekt
+    public class Clenek
     {
 
         private Point3D _koordinate;
@@ -16,7 +16,6 @@ namespace Palicje_MKE.lib.MKE
             {
                 _koordinate = value;
                 PosodobiIme();
-                OnPropertyChanged();
             }
         }
 
@@ -58,13 +57,6 @@ namespace Palicje_MKE.lib.MKE
         {
             _koordinate.Z = z;
             PosodobiIme();
-        }
-
-        public event EventHandler<ClenekEventArgs> ClenekUpdated;
-
-        protected virtual void OnClenekUpdated(Clenek clenek)
-        {
-            if(ClenekUpdated != null) ClenekUpdated(this, new ClenekEventArgs(clenek));
         }
     }
 

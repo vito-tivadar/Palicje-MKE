@@ -54,6 +54,7 @@ namespace Palicje_MKE.lib
                 visualModel.Children.Add(visualClenek);
                 OnPropertyChanged(nameof(visualModel));
                 konstrukcijaChanged = true;
+                App.kamera.Prilagodi();
                 return true;
             }
             return false;
@@ -66,8 +67,9 @@ namespace Palicje_MKE.lib
                 PipeVisual3D visualPalica = new PipeVisual3D();
                 visualPalica.Point1 = palica.clenek1.koordinate;
                 visualPalica.Point2 = palica.clenek2.koordinate;
-
                 visualPalica.Diameter = 0.14;
+                visualPalica.Material = NovMaterial(Colors.Orange);
+
                 visualPalica.SetName(palica.ime);
 
                 visualModel.Children.Add(visualPalica);

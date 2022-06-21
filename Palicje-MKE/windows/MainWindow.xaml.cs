@@ -40,6 +40,8 @@ namespace Palicje_MKE
             App.kamera.SetViewPort(viewport3D);
             App.kamera.RavninaXY();
 
+            MessageBox.Show("Program podpira prikaz 3D konstrukcij, vendar je trenutno možno preračunati le 2D konstrukcije (XY).");
+
         }
 
         public void OpenGithub(object sender, RoutedEventArgs e)

@@ -1,10 +1,13 @@
-﻿using HelixToolkit.Wpf;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Media3D;
 using System.Windows.Media;
+using System.IO;
+
+using Newtonsoft.Json;
+using HelixToolkit.Wpf;
 using Palicje_MKE.lib.MKE;
-using System;
+using Microsoft.Win32;
 
 namespace Palicje_MKE.lib
 {
@@ -23,12 +26,54 @@ namespace Palicje_MKE.lib
             visualModel = new ModelVisual3D();
         }
 
-        private bool konstrukcijaChanged = false;
-        public void PocistiElemente()
+        public bool changed = false;
+
+        public void Nova()
         {
-            visualModel = new ModelVisual3D();
+            visualModel.Children.Clear();
             clenki.Clear();
             palice.Clear();
+            changed = false;
+            App.sporocilo.SetText("Ustvarjena je bila nova konstrukcija.");
+        }
+
+        public void Odpri()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Datoteke Konstrukcij(*.kon)|*.kon|All files (*.*)|*.*";
+            ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            ofd.RestoreDirectory = true;
+
+            if ((bool)ofd.ShowDialog())
+            {
+                Console.WriteLine(ofd.FileName);
+                string file = File.ReadAllText(ofd.FileName);
+                Tuple<Clenki, Palice> k = JsonConvert.DeserializeObject<Tuple<Clenki, Palice>>(file);
+                this.clenki = k.Item1;
+                this.palice = k.Item2;
+                DodajVisualElemente();
+                changed = false;
+                App.sporocilo.SetText("Naložena konstrukcija: " + ofd.FileName);
+            }
+        }
+
+        public bool Shrani()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Datoteke Konstrukcij(*.kon)|*.kon|All files (*.*)|*.*";
+            sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            sfd.RestoreDirectory = true;
+            
+            if ((bool)sfd.ShowDialog())
+            {
+                Tuple<Clenki, Palice> k = new Tuple<Clenki, Palice>(clenki, palice);
+                string contents = JsonConvert.SerializeObject(k, Formatting.Indented);
+                File.WriteAllText(sfd.FileName, contents);
+                this.changed = false;
+                App.sporocilo.SetText("Konstrukcija shranjena.");
+                return true;
+            }
+            else return false;
         }
 
         public void UndoLast()
@@ -38,7 +83,7 @@ namespace Palicje_MKE.lib
             {
                 visualModel.Children.RemoveAt(visualModel.Children.Count - 1);
                 OnPropertyChanged(nameof(visualModel));
-                konstrukcijaChanged = true;
+                changed = true;
             }
         }
 
@@ -55,7 +100,7 @@ namespace Palicje_MKE.lib
 
                 visualModel.Children.Add(visualClenek);
                 OnPropertyChanged(nameof(visualModel));
-                konstrukcijaChanged = true;
+                changed = true;
                 App.kamera.Prilagodi();
                 return true;
             }
@@ -76,7 +121,7 @@ namespace Palicje_MKE.lib
 
                 visualModel.Children.Add(visualPalica);
                 OnPropertyChanged(nameof(visualModel));
-                konstrukcijaChanged = true;
+                changed = true;
                 return true;
             }
             return false;
@@ -138,6 +183,39 @@ namespace Palicje_MKE.lib
                     continue;
                 }
             }
+        }
+
+        private void DodajVisualElemente()
+        {
+            visualModel.Children.Clear();
+            foreach (Clenek clenek in clenki)
+            {
+                SphereVisual3D visualClenek = new SphereVisual3D();
+                visualClenek.Center = clenek.koordinate;
+                visualClenek.Radius = 0.20;
+                visualClenek.Material = NovMaterial("3498db");
+                visualClenek.SetName(clenek.ime);
+
+                visualModel.Children.Add(visualClenek);
+                
+                changed = true;
+            }
+
+            foreach (Palica palica in palice)
+            {
+                PipeVisual3D visualPalica = new PipeVisual3D();
+                visualPalica.Point1 = palica.clenek1.koordinate;
+                visualPalica.Point2 = palica.clenek2.koordinate;
+                visualPalica.Diameter = 0.20;
+                visualPalica.Material = Materials.Orange;
+
+                visualPalica.SetName(palica.ime);
+
+                visualModel.Children.Add(visualPalica);
+            }
+
+            OnPropertyChanged(nameof(visualModel));
+            App.kamera.Prilagodi();
         }
 
         public void OdstraniVisualElement(string ImeElementa)

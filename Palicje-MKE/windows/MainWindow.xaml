@@ -8,13 +8,7 @@
         xmlns:local="clr-namespace:Palicje_MKE"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        MinWidth="640" MinHeight="360">
-    <Window.CommandBindings>
-        <CommandBinding Command="New" CanExecute="CommonCommandBinding_CanExecute" />
-        <CommandBinding Command="Open" CanExecute="CommonCommandBinding_CanExecute" />
-        <CommandBinding Command="Save" CanExecute="CommonCommandBinding_CanExecute" />
-    </Window.CommandBindings>
-    
+        MinWidth="640" MinHeight="360" Closing="Window_Closing">
 
     <Window.Resources>
         <!-- Navpični zavihki -->
@@ -43,41 +37,44 @@
         <!-- Vrstica z meniji -->
         <Menu FontSize="14" VerticalAlignment="Top" >
             <MenuItem Header="Datoteka" Padding="10,2" VerticalAlignment="Stretch">
-                <MenuItem Header="Novo"/>
-                <MenuItem Header="Odpri"/>
-                <MenuItem Header="Shrani"/>
-                <MenuItem Header="Shrani kot"/>
+                <MenuItem Header="Novo" Click="NovaKonstrukcija"/>
+                <MenuItem Header="Odpri" Click="OdpriKonstrukcijo"/>
+                <MenuItem Header="Shrani" Click="ShraniKonstrukcijo"/>
+                <!--<MenuItem Header="Shrani kot"/>-->
                 <Separator/>
-                <MenuItem Header="Izhod"/>
+                <MenuItem Header="Izhod" Click="ZapriProgram"/>
             </MenuItem>
             <MenuItem Header="Uredi" Padding="10,2" VerticalAlignment="Stretch">
-                <MenuItem Header="Dodaj Členek"/>
-                <MenuItem Header="Odstrani Členek"/>
-                <MenuItem Header="Dodaj Palico"/>
-                <MenuItem Header="Odstrani Palico"/>
+                <MenuItem Header="Dodaj Členek" Click="DodajClenek_Click"/>
+                <MenuItem Header="Dodaj Palico" Click="DodajPalico_Click"/>
                 <Separator/>
-                <MenuItem Header="Nastavitve"/>
                 <!--
+                <MenuItem Header="Nastavitve"/>
                 nastavitve: barve elementov, tema, jezik, 
                 -->
             </MenuItem>
             <MenuItem Header="Pogled" Padding="10,2" VerticalAlignment="Stretch">
-                <MenuItem Header="Velikost elementov"/>
+                <!--
+                
+                <MenuItem Header="Prikaži deformacije(rezultate)" IsCheckable="True" StaysOpenOnClick="True"/> 
                 <Separator/>
-                <MenuItem Header="Vklopi pogledde">
-                    <MenuItem Header="Ravnina XY" IsCheckable="True" StaysOpenOnClick="True"/>
-                    <MenuItem Header="Ravnina XZ" IsCheckable="True" StaysOpenOnClick="True"/>
-                    <MenuItem Header="Ravnina YZ" IsCheckable="True" StaysOpenOnClick="True"/>
-                    <MenuItem Header="3D Pogled" IsCheckable="True" StaysOpenOnClick="True"/>
-                    <MenuItem Header="Pogled deformacij" IsCheckable="True" StaysOpenOnClick="True"/>
-                </MenuItem>
+                -->
+                <MenuItem Header="3D Pogled" StaysOpenOnClick="True" Click="Pogled_Click"/>
+                <MenuItem Header="Ravnina XY" StaysOpenOnClick="True" Click="Pogled_Click"/>
+                <MenuItem Header="Ravnina XZ" StaysOpenOnClick="True" Click="Pogled_Click"/>
+                <MenuItem Header="Ravnina YZ" StaysOpenOnClick="True" Click="Pogled_Click"/>
             </MenuItem>
+            
             <MenuItem Header="O programu" Padding="10,2" VerticalAlignment="Stretch">
+                <!--
                 <MenuItem Header="Kako uporabljati program"/>
+                -->
                 <MenuItem Header="Github" Click="OpenGithub"/>
                 <MenuItem Header="Ikone (icons8)" Click="OpenIcons8"/>
             </MenuItem>
+            <!--
             <MenuItem Margin="50,0,0,0" Header="test => json" Click="TestToJSON_Click"/>
+            -->
         </Menu>
         <!-- Glavni del -->
         <Grid Margin="0,25,0,24">

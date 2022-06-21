@@ -51,9 +51,44 @@ namespace Palicje_MKE
             System.Diagnostics.Process.Start("https://icons8.com/");
         }
 
-        private void CommonCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.CanExecute = true;
+            if (konstrukcija.changed) ShraniMsgBox();
+        }
+
+        private void ZapriProgram(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void NovaKonstrukcija(object sender, RoutedEventArgs e)
+        {
+            if (konstrukcija.changed)
+                if (!ShraniMsgBox()) return;
+
+            konstrukcija.Nova();
+            posodobiClenek.Visibility = Visibility.Collapsed;
+            posodobiPalico.Visibility = Visibility.Collapsed;
+        }
+
+        private void ShraniKonstrukcijo(object sender, RoutedEventArgs e)
+        {
+            konstrukcija.Shrani();
+        }
+
+        private void OdpriKonstrukcijo(object sender, RoutedEventArgs e)
+        {
+            konstrukcija.Odpri();
+        }
+
+        private bool ShraniMsgBox()
+        {
+            MessageBoxResult result = MessageBox.Show("Trenutna konstrukcija ni shranjena. Shrani?", "Paličje MKE", MessageBoxButton.OKCancel);
+            if(result == MessageBoxResult.OK)
+            {
+                if (!konstrukcija.Shrani()) return false;
+            }
+            return true;
         }
 
         private void DodajClenek_Click(object sender, RoutedEventArgs e)
@@ -171,6 +206,29 @@ namespace Palicje_MKE
         private void CameraFit_Click(object sender, RoutedEventArgs e)
         {
             App.kamera.Prilagodi();
+        }
+
+        private void Pogled_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = sender as MenuItem;
+            switch (mi.Header)
+            {
+                case "Ravnina XY":
+                    App.kamera.RavninaXY();
+                    break;
+                case "Ravnina YZ":
+                    App.kamera.RavninaYZ();
+                    break;
+                case "Ravnina XZ":
+                    App.kamera.RavninaXZ();
+                    break;
+               case "3D Pogled":
+                    App.kamera.Default();
+                    break;
+                default:
+                    break;
+            }
+            
         }
     }
 }

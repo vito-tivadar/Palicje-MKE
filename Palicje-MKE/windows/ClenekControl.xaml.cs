@@ -93,6 +93,7 @@ namespace Palicje_MKE.windows
                 clenek.koordinate = p;
                 prejsnjeKoordinate = p;
                 konstrukcija.PosodobiVisualClenek(clenek);
+                konstrukcija.changed = true;
             }
         }
 

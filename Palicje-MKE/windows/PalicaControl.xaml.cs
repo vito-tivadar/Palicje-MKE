@@ -93,6 +93,7 @@ namespace Palicje_MKE.windows
             ComboBox cb = sender as ComboBox;
             if (cb.Name == "prviClenek") konstrukcija.PosodobiVisualPalico(palica.clenek1, prejsnjiClenek1.ime);
             else konstrukcija.PosodobiVisualPalico(palica.clenek2, prejsnjiClenek2.ime);
+            konstrukcija.changed = true;
         }
 
 

@@ -41,7 +41,7 @@ namespace Palicje_MKE
             App.kamera.SetViewPort(viewport3D);
             App.kamera.RavninaXY();
 
-            MessageBox.Show("Program podpira prikaz 3D konstrukcij, vendar je trenutno možno preračunati le 2D konstrukcije (XY).");
+            //MessageBox.Show("Program podpira prikaz 3D konstrukcij, vendar je trenutno možno preračunati le 2D konstrukcije (XY).");
 
         }
 
@@ -86,8 +86,8 @@ namespace Palicje_MKE
 
         private bool ShraniMsgBox()
         {
-            MessageBoxResult result = MessageBox.Show("Trenutna konstrukcija ni shranjena. Shrani?", "Paličje MKE", MessageBoxButton.OKCancel);
-            if(result == MessageBoxResult.OK)
+            MessageBoxResult result = MessageBox.Show("Trenutna konstrukcija ni shranjena. Shrani?", "Paličje MKE", MessageBoxButton.YesNo);
+            if(result == MessageBoxResult.Yes)
             {
                 if (!konstrukcija.Shrani()) return false;
             }
@@ -230,6 +230,19 @@ namespace Palicje_MKE
                     break;
                 default:
                     break;
+            }
+            
+        }
+
+        private void TEST_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                konstrukcija.Resi();
+            }
+            catch
+            {
+                App.sporocilo.SetError("Konstrukcije ni mogoče preračunati.");
             }
             
         }

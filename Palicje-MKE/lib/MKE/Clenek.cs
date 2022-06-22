@@ -17,21 +17,11 @@ namespace Palicje_MKE.lib.MKE
                 PosodobiIme();
             }
         }
-
-        private Vector3D _sila;
-        public Vector3D sila
-        {
-            get { return _sila; }
-            set { _sila = value; }
-        }
-
-
-
+        public Vector3D sila { get; set; }
         public Podpora podpora { get; set; }
-
         public string prejsnjeIme { get; set; }
         public string ime { get; set; }
-        public int gPS;                             // oznaka prostostne stopnje v globalnem sistemu
+        public int gPS { get; set; } = 0;                       // oznaka prostostne stopnje v globalnem sistemu
 
 
         public Clenek(Point3D koordinate, Podpora podpora)
@@ -66,6 +56,17 @@ namespace Palicje_MKE.lib.MKE
         {
             _koordinate.Z = z;
             PosodobiIme();
+        }
+
+        public double[] LokalnaSilaClenka(int steviloPS)
+        {
+            double[] k = new double[steviloPS * 3];
+
+            k[3 * gPS - 3] = sila.X;
+            k[3 * gPS - 2] = sila.Y;
+            k[3 * gPS - 1] = sila.Z;
+
+            return k;
         }
     }
 
@@ -143,6 +144,15 @@ namespace Palicje_MKE.lib.MKE
             base.Items.Add(c);
             App.sporocilo.SetText($"Dodan je bil členek s koordinatami {c.ime}");
             return true;
+        }
+
+        public void DodajPS(Clenek c, int gPS)
+        {
+            int i = base.Items.IndexOf(c);
+            if (i != -1)
+            {
+                base.Items[i].gPS = gPS;
+            }
         }
 
         public bool Posodobi(Clenek clenek)

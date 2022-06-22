@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Palicje_MKE.windows"
         mc:Ignorable="d"
-        Title="Dodaj palico" Height="200" Width="200">
+        Title="Dodaj palico" Height="300" Width="200">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>

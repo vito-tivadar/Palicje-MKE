@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Palicje_MKE.windows"
         mc:Ignorable="d"
-        Title="Dodaj členek" Height="270"  Width="200" ResizeMode="NoResize" HorizontalAlignment="Stretch" >
+        Title="Dodaj členek" Height="400"  Width="200" ResizeMode="NoResize" HorizontalAlignment="Stretch" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>

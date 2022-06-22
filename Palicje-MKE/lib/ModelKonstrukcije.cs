@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using HelixToolkit.Wpf;
 using Palicje_MKE.lib.MKE;
 using Microsoft.Win32;
+using System.Windows;
 
 namespace Palicje_MKE.lib
 {
@@ -25,9 +26,125 @@ namespace Palicje_MKE.lib
             palice = new Palice();
 
             visualModel = new ModelVisual3D();
+            visualRezultat = new ModelVisual3D();
         }
 
         public bool changed = false;
+
+        public void Resi()
+        {
+            // disable all buttons
+
+            //dodaj zaporedna števila členkom
+            for (int i = 0; i < clenki.Count; i++)
+            {
+                clenki.DodajPS(clenki[i], i + 1);
+            }
+
+            double[,] globalnaTM = new double[3 * palice.Count, 3 * palice.Count];
+            double[] globalnaSila = new double[3 * palice.Count];
+
+
+
+            //dodajanje lokalnih sil členkov v globalno
+            foreach (Clenek clenek in clenki)
+            {
+                double[] sila = clenek.LokalnaSilaClenka(palice.Count);
+
+                for (int v = 0; v < sila.Length; v++)
+                {
+                    globalnaSila[v] += sila[v];
+                }
+            }
+
+            //dodajanje lokalnih togostnih matrik v globalno
+            foreach (Palica palica in palice)
+            {
+                double[,] tm = palica.TogostnaMatrikaElementa(palice.Count);
+
+                for (int v = 0; v < tm.GetLength(0); v++)
+                {
+                    for (int s = 0; s < tm.GetLength(1); s++)
+                    {
+                        globalnaTM[v, s] += tm[v, s];
+                    }
+                }
+            }
+
+            // odstrani vrstice in stolpce kjer so členki nepomični
+            Collection<int> pomicneStopnje = new Collection<int>();
+            for (int i = 0; i < clenki.Count; i++)
+            {
+                Podpora p = clenki[i].podpora;
+                if (!p.X) pomicneStopnje.Add(3 * (i + 1) - 3);
+                if (!p.Y) pomicneStopnje.Add(3 * (i + 1) - 2);
+                if (!p.Z) pomicneStopnje.Add(3 * (i + 1) - 1);
+            }
+
+            double[,] koncnaGlobalnaTM = new double[pomicneStopnje.Count, pomicneStopnje.Count];
+            double[] koncnaGlobalnaSila = new double[pomicneStopnje.Count];
+            for (int v = 0; v < pomicneStopnje.Count; v++)
+            {
+                for (int s = 0; s < pomicneStopnje.Count; s++)
+                {
+                    koncnaGlobalnaTM[v, s] = globalnaTM[pomicneStopnje[v], pomicneStopnje[s]];
+                }
+                koncnaGlobalnaSila[v] = globalnaSila[pomicneStopnje[v]];
+            }
+
+            // Gaussova eliminacija
+            for (int i = 0; i < pomicneStopnje.Count; i++)
+            {
+                for (int v = i + 1; v < pomicneStopnje.Count; v++)
+                {
+                    double koef = koncnaGlobalnaTM[v, i] / koncnaGlobalnaTM[i, i];
+                    for (int s = 0; s < pomicneStopnje.Count; s++)
+                    {
+                        koncnaGlobalnaTM[v, s] -= koncnaGlobalnaTM[i, s] * koef;
+                    }
+                    koncnaGlobalnaSila[v] -= koncnaGlobalnaSila[i] * koef;
+                }
+            }
+
+            //Izračun iskanih vrednosti
+            double temp = 0;
+            double n = 0;
+            double[] x = new double[pomicneStopnje.Count];
+
+            for (int vrstica = pomicneStopnje.Count - 1; vrstica >= 0; vrstica--)
+            {
+                for (int stolpec = pomicneStopnje.Count - 1; stolpec >= 0; stolpec--)
+                {
+                    if (vrstica == stolpec)
+                    {
+                        n = koncnaGlobalnaTM[stolpec, vrstica];
+                        break;
+                    }
+                    else
+                    {
+                        temp += koncnaGlobalnaTM[vrstica, stolpec] * koncnaGlobalnaSila[stolpec];
+                    }
+                }
+                koncnaGlobalnaSila[vrstica] = (koncnaGlobalnaSila[vrstica] - temp) / n;
+                x[vrstica] = koncnaGlobalnaSila[vrstica];
+                temp = 0;
+            }
+
+            string rezultati = "Pomiki vozlišč:\n";
+            for (int i = 0; i < pomicneStopnje.Count; i++)
+            {
+                int vozlisce = Convert.ToInt32(Math.Floor((decimal)pomicneStopnje[i] / 3)) + 1;
+
+                int ostanek = pomicneStopnje[i] % 3;
+                string smer = "";
+                if (ostanek == 0) smer = "x";
+                if (ostanek == 1) smer = "y";
+                if (ostanek == 2) smer = "z";
+                rezultati += $"Vozlišče {vozlisce} v smeri {smer}: {x[i].ToString("0.######")} mm\n";
+            }
+
+            MessageBox.Show(rezultati, "Rezultati");
+        }
 
         public void Nova()
         {
@@ -51,7 +168,14 @@ namespace Palicje_MKE.lib
                 string file = File.ReadAllText(ofd.FileName);
                 Tuple<Clenki, Palice> k = JsonConvert.DeserializeObject<Tuple<Clenki, Palice>>(file);
                 this.clenki = k.Item1;
-                this.palice = k.Item2;
+                foreach (Palica palica in k.Item2)
+                {
+                    Clenek c1 = clenki.Pridobi(palica.clenek1.koordinate);
+                    Clenek c2 = clenki.Pridobi(palica.clenek2.koordinate);
+
+                    Palica p = new Palica(c1, c2, palica.ploscinaPrereza, palica.modulElasticnosti);
+                    palice.Dodaj(p);
+                }
                 DodajVisualElemente();
                 changed = false;
                 App.sporocilo.SetText("Naložena konstrukcija: " + ofd.FileName);
@@ -64,7 +188,7 @@ namespace Palicje_MKE.lib
             sfd.Filter = "Datoteke Konstrukcij(*.kon)|*.kon|All files (*.*)|*.*";
             sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             sfd.RestoreDirectory = true;
-            
+
             if ((bool)sfd.ShowDialog())
             {
                 Tuple<Clenki, Palice> k = new Tuple<Clenki, Palice>(clenki, palice);
@@ -75,17 +199,6 @@ namespace Palicje_MKE.lib
                 return true;
             }
             else return false;
-        }
-
-        public void UndoLast()
-        {
-            int count = visualModel.Children.Count;
-            if (count > 0)
-            {
-                visualModel.Children.RemoveAt(visualModel.Children.Count - 1);
-                OnPropertyChanged(nameof(visualModel));
-                changed = true;
-            }
         }
 
         public bool DodajClenek(Clenek clenek)

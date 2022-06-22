@@ -2,6 +2,8 @@
 using Palicje_MKE.lib;
 using Palicje_MKE.lib.MKE;
 using System.Windows.Media.Media3D;
+using System;
+using System.Windows;
 
 namespace Palicje_MKE.windows
 {
@@ -15,6 +17,8 @@ namespace Palicje_MKE.windows
         public string imePalice;
         private Clenek prejsnjiClenek1;
         private Clenek prejsnjiClenek2;
+        public double prejsnjiME;
+        public double prejsnjaPloscina;
 
         private string[] _imenaDodanihPalic;
         public string[] imenaDodanihPalic
@@ -43,6 +47,9 @@ namespace Palicje_MKE.windows
             this.palica = palica;
             prejsnjiClenek1 = palica.clenek1;
             prejsnjiClenek2 = palica.clenek2;
+            prejsnjaPloscina = palica.ploscinaPrereza;
+            prejsnjiME = palica.modulElasticnosti;
+
             imenaDodanihPalic = konstrukcija.clenki.PridobiImena();
 
             PosodobiPolja();
@@ -52,6 +59,8 @@ namespace Palicje_MKE.windows
         {
             palica.clenek1 = prejsnjiClenek1;
             palica.clenek2 = prejsnjiClenek2;
+            palica.modulElasticnosti = prejsnjiME;
+            palica.ploscinaPrereza = prejsnjaPloscina;
 
             PosodobiPolja();
         }
@@ -60,6 +69,9 @@ namespace Palicje_MKE.windows
         {
             prviClenek.SelectedItem = prejsnjiClenek1.ime;
             drugiClenek.SelectedItem = prejsnjiClenek2.ime;
+
+            modulElasticnosti.Text = prejsnjiME.ToString();
+            ploscina.Text = prejsnjaPloscina.ToString();
         }
 
         private void PosodobiPalico(object sender, SelectionChangedEventArgs e)
@@ -113,6 +125,27 @@ namespace Palicje_MKE.windows
                 prviClenek.SelectedItem = prviClenek.Items[0];
                 drugiClenek.SelectedItem = drugiClenek.Items[1];
             }
+        }
+
+        private void TextChanged(object sender, RoutedEventArgs e)
+        {
+            double me = 0, p = 0;
+            try
+            {
+                me = Convert.ToDouble(modulElasticnosti.Text);
+                p = Convert.ToDouble(ploscina.Text);
+            }
+            catch
+            {
+                App.sporocilo.SetError("Modul elastičnosti in ploščina morata biti številčni vrednosti.");
+                modulElasticnosti.Text = prejsnjiME.ToString();
+                ploscina.Text = prejsnjaPloscina.ToString();
+                return;
+            }
+
+            palica.modulElasticnosti = me;
+            palica.ploscinaPrereza = p;
+            konstrukcija.changed = true;
         }
     }
 }

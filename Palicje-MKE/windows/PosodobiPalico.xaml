@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Palicje_MKE.windows"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="150" Background="White">
+             d:DesignHeight="290" d:DesignWidth="150" Background="White">
     <Grid>
         <local:PalicaControl x:Name="palicaControl" VerticalAlignment="Top"/>
         <Button Content="Odstrani palico" Margin="8,0,8,8" VerticalAlignment="Bottom" Height="24" Click="OdstraniPalico_Click"/>

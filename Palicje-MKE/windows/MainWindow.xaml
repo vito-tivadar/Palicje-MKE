@@ -8,24 +8,9 @@
         xmlns:local="clr-namespace:Palicje_MKE"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        MinWidth="640" MinHeight="360" Closing="Window_Closing">
+        MinWidth="640" MinHeight="515" Closing="Window_Closing">
 
     <Window.Resources>
-        <!-- Navpični zavihki -->
-        <Style TargetType="{x:Type TabItem}">
-            <Setter Property="HeaderTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <ContentPresenter Content="{TemplateBinding Content}">
-                            <ContentPresenter.LayoutTransform>
-                                <RotateTransform Angle="270" />
-                            </ContentPresenter.LayoutTransform>
-                        </ContentPresenter>
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Padding" Value="1,15" />
-        </Style>
         <!-- Prikazovalnik -->
         <Style TargetType="{x:Type ht:HelixViewport3D}">
             <Setter Property="IsViewCubeEdgeClicksEnabled" Value="False"/>
@@ -44,11 +29,13 @@
                 <Separator/>
                 <MenuItem Header="Izhod" Click="ZapriProgram"/>
             </MenuItem>
-            <MenuItem Header="Uredi" Padding="10,2" VerticalAlignment="Stretch">
+            <MenuItem Header="Uredi" Padding="10,2" VerticalAlignment="Stretch" >
                 <MenuItem Header="Dodaj Členek" Click="DodajClenek_Click"/>
                 <MenuItem Header="Dodaj Palico" Click="DodajPalico_Click"/>
                 <Separator/>
+                <MenuItem Header="Izračun konstrukcije" Click="TEST_Click"/>
                 <!--
+                <Separator/>
                 <MenuItem Header="Nastavitve"/>
                 nastavitve: barve elementov, tema, jezik, 
                 -->
@@ -64,17 +51,18 @@
                 <MenuItem Header="Ravnina XZ" StaysOpenOnClick="True" Click="Pogled_Click"/>
                 <MenuItem Header="Ravnina YZ" StaysOpenOnClick="True" Click="Pogled_Click"/>
             </MenuItem>
-            
-            <MenuItem Header="O programu" Padding="10,2" VerticalAlignment="Stretch">
+
+            <MenuItem Header="O programu" Padding="10,2" VerticalAlignment="Stretch" >
                 <!--
                 <MenuItem Header="Kako uporabljati program"/>
                 -->
-                <MenuItem Header="Github" Click="OpenGithub"/>
-                <MenuItem Header="Ikone (icons8)" Click="OpenIcons8"/>
+                <MenuItem Header="Github" Click="OpenGithub" />
+                <MenuItem Header="Ikone (icons8)" Click="OpenIcons8" />
             </MenuItem>
             <!--
             <MenuItem Margin="50,0,0,0" Header="test => json" Click="TestToJSON_Click"/>
             -->
+            
         </Menu>
         <!-- Glavni del -->
         <Grid Margin="0,25,0,24">

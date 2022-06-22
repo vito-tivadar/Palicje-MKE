@@ -18,6 +18,7 @@ namespace Palicje_MKE.windows
     {
         public Clenek clenek;
         public Point3D prejsnjeKoordinate;
+        public Vector3D prejsnjaSila;
         public Podpora prejsnjaPodpora;
         public ModelKonstrukcije konstrukcija;
 
@@ -31,6 +32,7 @@ namespace Palicje_MKE.windows
         {
             this.clenek = clenek;
             prejsnjeKoordinate = clenek.koordinate;
+            prejsnjaSila = clenek.sila;
             prejsnjaPodpora = clenek.podpora;
 
             PosodobiPolja();
@@ -39,6 +41,7 @@ namespace Palicje_MKE.windows
         public void RazveljaviSpremembe()
         {
             clenek.koordinate = prejsnjeKoordinate;
+            clenek.sila = prejsnjaSila;
             clenek.podpora = prejsnjaPodpora;
 
             PosodobiPolja();
@@ -54,6 +57,10 @@ namespace Palicje_MKE.windows
             X.Text = clenek.koordinate.X.ToString();
             Y.Text = clenek.koordinate.Y.ToString();
             Z.Text = clenek.koordinate.Z.ToString();
+            
+            fX.Text = clenek.sila.X.ToString();
+            fY.Text = clenek.sila.Y.ToString();
+            fZ.Text = clenek.sila.Z.ToString();
 
             X_checkBox.IsChecked = clenek.podpora.X;
             Y_checkBox.IsChecked = clenek.podpora.Y;
@@ -64,14 +71,16 @@ namespace Palicje_MKE.windows
         {
             if (clenek == null) return;
             Point3D p;
+            Vector3D f;
             try
             {
                 p = new Point3D(Convert.ToDouble(X.Text), Convert.ToDouble(Y.Text), Convert.ToDouble(Z.Text));
+                f = new Vector3D(Convert.ToDouble(fX.Text), Convert.ToDouble(fY.Text), Convert.ToDouble(fZ.Text));
             }
             catch
             {
                 RazveljaviSpremembe();
-                App.sporocilo.SetError("Koordinate morajo biti številčne vrednosti.");
+                App.sporocilo.SetError("Koordinate in sile morajo biti številčne vrednosti.");
                 return;
             }
 
@@ -79,27 +88,26 @@ namespace Palicje_MKE.windows
             {
                 clenek.koordinate = p;
                 prejsnjeKoordinate = p;
+                clenek.sila = f;
+                prejsnjaSila = f;
                 clenek.PosodobiPrejsnjeIme();
                 return;
             }
             else 
             {
-                if (konstrukcija.clenki.Pridobi(p) != null)
+                if (konstrukcija.clenki.Pridobi(p) != null && prejsnjaSila == f)
                 {
-                    App.sporocilo.SetError($"Členek s koordinatami ({p}) že obstaja. :)");
+                    App.sporocilo.SetError($"Členek s koordinatami ({p}) že obstaja.");
                     RazveljaviSpremembe();
                     return;
                 }
                 clenek.koordinate = p;
                 prejsnjeKoordinate = p;
+                clenek.sila = f;
+                prejsnjaSila = f;
                 konstrukcija.PosodobiVisualClenek(clenek);
                 konstrukcija.changed = true;
             }
-        }
-
-        private void OdstraniClenek_button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)

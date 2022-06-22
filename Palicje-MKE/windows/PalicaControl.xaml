@@ -5,8 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Palicje_MKE.windows"
              mc:Ignorable="d" 
-             d:DesignHeight="130" d:DesignWidth="150">
+             d:DesignHeight="240" d:DesignWidth="150">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="130"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <TextBlock Margin="5,5,0,0" Text="Lastnosti palice:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16"/>
 
         <TextBlock Margin="8,30,0,0" Text="Prvi členek palice:" HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -14,5 +18,18 @@
 
         <TextBlock Margin="8,80,0,0" Text="Drugi členek palice:" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <ComboBox x:Name="drugiClenek" HorizontalAlignment="Stretch" Margin="8,98,8,0" VerticalAlignment="Top" SelectionChanged="PosodobiPalico" />
+
+        <Grid Grid.Row="1" Margin="8,0,8,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Ploščina prereza:" Grid.Row="0" VerticalAlignment="Center"/>
+            <TextBox x:Name="ploscina" Grid.Row="1" LostFocus="TextChanged"/>
+            <TextBlock Text="Ploščina prereza:" Grid.Row="2" VerticalAlignment="Center"/>
+            <TextBox x:Name="modulElasticnosti" Grid.Row="3" LostFocus="TextChanged"/>
+        </Grid>
     </Grid>
 </UserControl>

@@ -22,14 +22,13 @@ namespace Palicje_MKE.lib.MKE
         public double ploscinaPrereza;
         public double modulElasticnosti;
 
-        public Palica(Clenek clenek1, Clenek clenek2/*, double ploscinaPrereza, double modulElasticnosti*/)
+        public Palica(Clenek clenek1, Clenek clenek2, double ploscinaPrereza = 0.01, double modulElasticnosti = 210 * 100000)
         {
             this.clenek1 = clenek1;
             this.clenek2 = clenek2;
-            /* 
-            _ploscinaPrereza = ploscinaPrereza;             
-            _modulElasticnosti = modulElasticnosti;
-            */
+
+            this.ploscinaPrereza = ploscinaPrereza;
+            this.modulElasticnosti = modulElasticnosti;
         }
 
         private void PosodobiPrviClenek(object sender, EventArgs e)
@@ -57,11 +56,13 @@ namespace Palicje_MKE.lib.MKE
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="gPS">Število vseh globalnih prostostnih stopenj.</param>
+        /// <param name="steviloPS">Število vseh globalnih prostostnih stopenj.</param>
         /// <returns></returns>
-        public double[,] TogostnaMatrikaElementa(int gPS)
+        public double[,] TogostnaMatrikaElementa(int steviloPS)
         {
             double d = dolzina;
+            int clenek1PS = clenek1.gPS;
+            int clenek2PS = clenek2.gPS;
 
             double[] t = new double[] {
                 (clenek2.koordinate.X - clenek1.koordinate.X) / d,      // cx
@@ -69,24 +70,19 @@ namespace Palicje_MKE.lib.MKE
                 (clenek2.koordinate.Z - clenek1.koordinate.Z) / d,      // cz
             };
 
-            double[,] k = new double[gPS, gPS];                             // togostna matrika
+            double[,] k = new double[steviloPS * 3, steviloPS * 3];     // togostna matrika
 
-            int clenek1PS = clenek1.gPS;
-            int clenek2PS = clenek2.gPS;
-
-            for (int v = 0; v < 3; v++)
+            for (int v = 3; v > 0; v--)
             {
-                for (int s = 0; s < 3; s++)
+                for (int s = 3; s > 0; s--)
                 {
-                    double a =((ploscinaPrereza * modulElasticnosti)/d) * t[v] * t[s];
-
-                    k[v, s] = a;
-                    k[v + 3, s] = -a;
-                    k[v, s + 3] = -a;
-                    k[v + 3, s + 3] = a;
+                    double a = ((ploscinaPrereza * modulElasticnosti) / d) * t[-(v-3)] * t[-(s - 3)];
+                    k[3 * clenek1PS - v, 3 * clenek1PS - s] =  a;
+                    k[3 * clenek1PS - v, 3 * clenek2PS - s] = -a;
+                    k[3 * clenek2PS - v, 3 * clenek1PS - s] = -a;
+                    k[3 * clenek2PS - v, 3 * clenek2PS - s] =  a;
                 }
             }
-
             return k;
         }
     }

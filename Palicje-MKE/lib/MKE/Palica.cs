@@ -52,6 +52,43 @@ namespace Palicje_MKE.lib.MKE
 
             return Math.Sqrt(x + y + z);
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gPS">Število vseh globalnih prostostnih stopenj.</param>
+        /// <returns></returns>
+        public double[,] TogostnaMatrikaElementa(int gPS)
+        {
+            double d = dolzina;
+
+            double[] t = new double[] {
+                (clenek2.koordinate.X - clenek1.koordinate.X) / d,      // cx
+                (clenek2.koordinate.Y - clenek1.koordinate.Y) / d,      // cy
+                (clenek2.koordinate.Z - clenek1.koordinate.Z) / d,      // cz
+            };
+
+            double[,] k = new double[gPS, gPS];                             // togostna matrika
+
+            int clenek1PS = clenek1.gPS;
+            int clenek2PS = clenek2.gPS;
+
+            for (int v = 0; v < 3; v++)
+            {
+                for (int s = 0; s < 3; s++)
+                {
+                    double a =((ploscinaPrereza * modulElasticnosti)/d) * t[v] * t[s];
+
+                    k[v, s] = a;
+                    k[v + 3, s] = -a;
+                    k[v, s + 3] = -a;
+                    k[v + 3, s + 3] = a;
+                }
+            }
+
+            return k;
+        }
     }
 
 

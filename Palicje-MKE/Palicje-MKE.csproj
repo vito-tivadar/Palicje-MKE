@@ -87,8 +87,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="lib\Helix-Toolkit\Kamera.cs" />
-    <Compile Include="lib\MKE\KalkulatorPaličja.cs" />
-    <Compile Include="lib\MKE\Sila.cs" />
+    <Compile Include="lib\MKE\KalkulatorPalicja.cs" />
+    <Compile Include="lib\MKE\MatFunkcije.cs" />
     <Compile Include="lib\ModelKonstrukcije.cs" />
     <Compile Include="lib\NadzorujObjekt.cs" />
     <Compile Include="lib\MKE\Palica.cs" />

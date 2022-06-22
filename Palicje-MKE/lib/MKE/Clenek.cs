@@ -8,7 +8,6 @@ namespace Palicje_MKE.lib.MKE
     {
 
         private Point3D _koordinate;
-
         public Point3D koordinate
         {
             get { return _koordinate; }
@@ -19,10 +18,20 @@ namespace Palicje_MKE.lib.MKE
             }
         }
 
+        private Vector3D _sila;
+        public Vector3D sila
+        {
+            get { return _sila; }
+            set { _sila = value; }
+        }
+
+
+
         public Podpora podpora { get; set; }
 
         public string prejsnjeIme { get; set; }
         public string ime { get; set; }
+        public int gPS;                             // oznaka prostostne stopnje v globalnem sistemu
 
 
         public Clenek(Point3D koordinate, Podpora podpora)

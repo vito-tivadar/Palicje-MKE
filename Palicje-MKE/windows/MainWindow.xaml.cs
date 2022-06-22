@@ -33,6 +33,7 @@ namespace Palicje_MKE
             posodobiPalico.DodajModelKonstrukcije(konstrukcija);
 
             viewportModel.Children.Add(konstrukcija.visualModel);
+            viewportModel.Children.Add(konstrukcija.visualRezultat);
 
             App.sporocilo.SetTextBlock(ProgramMessageBox);
             App.sporocilo.SetText("Program za preračun paličnih konstrukcij", Colors.CadetBlue, "Izdelal: Vito Tivadar");

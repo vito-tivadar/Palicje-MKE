@@ -17,6 +17,7 @@ namespace Palicje_MKE.lib
         public Palice palice;
 
         public ModelVisual3D visualModel;
+        public ModelVisual3D visualRezultat;
 
         public ModelKonstrukcije()
         {

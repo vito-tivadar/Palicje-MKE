@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Palicje_MKE.lib.MKE
 {
-    internal class KalkulatorPaličja
+    internal class KalkulatorPalicja
     {
     }
 }

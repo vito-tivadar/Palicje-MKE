@@ -187,9 +187,6 @@
     <Resource Include="icons8-nodes-60.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="mke-logo.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
@@ -200,9 +197,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="mke-logo-small.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\icons8-window-settings-100.png" />

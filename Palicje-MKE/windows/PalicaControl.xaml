@@ -28,7 +28,7 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Ploščina prereza:" Grid.Row="0" VerticalAlignment="Center"/>
             <TextBox x:Name="ploscina" Grid.Row="1" LostFocus="TextChanged"/>
-            <TextBlock Text="Ploščina prereza:" Grid.Row="2" VerticalAlignment="Center"/>
+            <TextBlock Text="Modul elastičnosti:" Grid.Row="2" VerticalAlignment="Center"/>
             <TextBox x:Name="modulElasticnosti" Grid.Row="3" LostFocus="TextChanged"/>
         </Grid>
     </Grid>
